@@ -1,28 +1,30 @@
-<%= stylesheet_link_tag    'mobile', media: 'all' %>
-<%= javascript_include_tag 'mobile' %>
-<%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'mobile', media: 'all' %>
+    <%= javascript_include_tag 'mobile' %>
+    <%= csrf_meta_tags %>
+</head>
+<body>
+    <section id="main">
+        <header data-title="transit">
+            Hey
+        </header>
+        <article id="article_1" class="active">
+            <button class="button" data-view-article="article_2" data-icon="forward">To article_2</button>
+        </article>
+        <article id="article_2" class="active">
+            <button class="button" data-view-article="article_1" data-icon="home" data-label="To article_1"></button>
+        </article>
+        <footer>
+            <nav>
+                <a href="#" data-icon="menu" class="active"></a>
+                <a href="#" data-icon="share"></a>
+                <a href="#" data-icon="user"></a>
+                <a href="#" data-icon="users"></a>
+            </nav>
+        </footer>
+    </section>
 
-<section id="main">
-    <header data-title="transit">
-        Hey
-    </header>
-    <article id="article_1" class="active">
-        <button class="button" data-view-article="article_2" data-icon="forward">To article_2</button>
-    </article>
-    <article id="article_2" class="active">
-        <button class="button" data-view-article="article_1" data-icon="home" data-label="To article_1"></button>
-    </article>
-    <footer>
-        <nav>
-            <a href="#" data-icon="menu" class="active"></a>
-            <a href="#" data-icon="share"></a>
-            <a href="#" data-icon="user"></a>
-            <a href="#" data-icon="users"></a>
-        </nav>
-    </footer>
-</section>
 
-
-<script>
-    Lungo.init({});
-</script>
+    <script>
+        Lungo.init({});
+    </script>
+</body>
