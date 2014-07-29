@@ -12,8 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
-//= require_tree .
+//= require_tree ./desktop
+
 $( document ).ready(function() {
     if(window.google)
         MapSystem.loadMap();
