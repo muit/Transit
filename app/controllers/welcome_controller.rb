@@ -1,6 +1,9 @@
 class WelcomeController < ApplicationController
   def index
-    puts mobile_device?
-    render 'index'
+    if mobile_device?
+      render 'mobile'
+    else
+      render 'desktop'
+    end
   end
 end

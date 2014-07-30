@@ -3,22 +3,14 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  def check_for_mobile
-    session[:mobile_override] = params[:mobile] if params[:mobile]
-    prepare_for_mobile if mobile_device?
-  end
-
-  def prepare_for_mobile
-    prepend_view_path Rails.root + 'app' + 'views_mobile'
-  end
+  helper_method :mobile_device?
+  private
 
   def mobile_device?
-    if session[:mobile_override]
-      session[:mobile_override] == "1"
+    if session[:mobile_param]
+      session[:mobile_param] == "1"
     else
-      # Season this regexp to taste. I prefer to treat iPad as non-mobile.
-      (request.user_agent =~ /Mobile|webOS/ ) && (request.user_agent !~ /iPad/)
+      request.user_agent =~ /Mobile|webOS/
     end
   end
-  helper_method :mobile_device?
 end
