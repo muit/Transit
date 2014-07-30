@@ -1,0 +1,12 @@
+children:
+  - Organism.Header:
+      children:
+        - Molecule.Navigation:
+            children:
+              - Atom.Button:
+                  events:
+                    - touch
+                  icon: navicon-round
+                  path: settings
+            style: left
+id: main

@@ -1,0 +1,72 @@
+[data-atom-button]
+  cursor: pointer
+
+  [data-atoms=app] [data-organism-header] &
+    > abbr
+      font-weight: FONT_WEIGHT_NORMAL
+
+  [data-atoms=app] section &
+    border-radius: BORDER_RADIUS
+    background-color: BUTTON
+    color: darken(BUTTON, 50%)
+    > abbr
+      font-weight: FONT_WEIGHT_NORMAL
+
+    &:not([disabled])
+      transition: opacity 0.25s ease, background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease
+
+      PERCENT = 30%
+      &:active
+        color: WHITE
+        background-color: darken(BUTTON, PERCENT)
+        box-shadow inset 0 1px 0 rgba(0,0,0, 0.1)
+
+      &.accept
+        background-color: ACCEPT
+        &:active
+          background-color: darken(ACCEPT, PERCENT)
+      &.cancel
+        background-color: CANCEL
+        &:active
+          background-color: darken(CANCEL, PERCENT)
+      &.warning
+        background-color: WARNING
+        &:active
+          background-color: darken(WARNING, PERCENT)
+      &.theme
+        background-color: THEME
+        &:active
+          background-color: darken(THEME, PERCENT)
+
+      &:not(.accept):not(.cancel):not(.warning)
+        box-shadow inset 0 -1px rgba(0,0,0, 0.1)
+
+      &.accept, &.cancel, &.warning, &.theme
+        box-shadow inset 0 -1px rgba(0,0,0, 0.2)
+        color: WHITE
+
+    &[disabled]
+      & > abbr, & .icon
+        opacity: 0.35
+
+  [data-atoms=app] & > small
+    font-weight: bold
+    border-radius: .25rem
+    color: WHITE
+    background-color: THEME
+  [data-atoms=app] header & > small
+    background-color: DARK
+
+
+@media screen and (min-width: 1024px)
+  [data-atoms=app] [data-organism-section] [data-atom-button]:not([disabled])
+    PERCENT = 15%
+    &:not(.accept):not(.cancel):not(.warning):hover
+      background-color: darken(BUTTON, PERCENT)
+      color: WHITE
+    &.accept:hover
+      background-color: darken(ACCEPT, PERCENT)
+    &.cancel:hover
+      background-color: darken(CANCEL, PERCENT)
+    &.warning:hover
+      background-color: darken(WARNING, PERCENT)

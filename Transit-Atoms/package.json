@@ -1,0 +1,20 @@
+{
+  "name"            : "transit",
+  "version"         : "1.0.0",
+  "description"     : "Public transport info in real time.",
+  "author"          : "undefined <undefined>",
+  "homepage"        : "http://tapquo.com",
+  "license"         : "MIT",
+  "devDependencies" : {
+    "gulp"        : "*",
+    "gulp-coffee" : "*",
+    "gulp-concat" : "*",
+    "gulp-connect": "*",
+    "gulp-header" : "*",
+    "gulp-jasmine": "*",
+    "gulp-stylus" : "*",
+    "gulp-uglify" : "*",
+    "gulp-util"   : "*",
+    "gulp-yml"    : "*"
+  }
+}

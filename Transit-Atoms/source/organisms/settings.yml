@@ -1,0 +1,8 @@
+children:
+  - Organism.Header:
+      children:
+        - Atom.Heading:
+            size: h1
+            value: Settings
+id: settings
+method: prepend

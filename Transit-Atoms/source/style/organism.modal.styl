@@ -1,0 +1,68 @@
+[data-system=modal]
+  &:not(.active)
+    display: none
+  &.active
+    background-color: rgba(0,0,0,0.75)
+    & > [data-organism]
+      vendor(animation-duration, ANIMATION_DURATION)
+      vendor(animation-timing-function, ANIMATION_EASE)
+      &.show
+        vendor(animation-name, modal-show)
+        vendor(animation-direction, normal)
+      &.hide
+        vendor(animation-name, modal-show)
+        vendor(animation-direction, reverse)
+        vendor(animation-fill-mode, forwards)
+
+    & > [data-extend=loading]
+      SPEED = ANIMATION_DURATION * 1.4
+      &::before
+        animation modal-loading SPEED 0 infinite
+      &::after
+        animation modal-loading SPEED (SPEED / 2) infinite
+
+  & > :not([data-extend=loading])
+    background-color: lighten(BACKGROUND, 2.5%)
+    color: darken(BACKGROUND, 75%)
+
+    &.accept > header
+      background-color: ACCEPT
+    &.cancel > header
+      background-color: CANCEL
+    &.warning > header
+      background-color: WARNING
+    &.accept, &.cancel, &.warning
+      > header
+        color: WHITE
+    > footer
+      background-color: darken(BACKGROUND, 2.5%)
+      border-top: solid 1px darken(BACKGROUND, 5%)
+
+  & > [data-extend=loading]
+    background: darken(DARK, 50%)
+    border-radius: 1rem
+    &::before, &::after
+      background-color: WHITE
+      border-radius: 50%
+
+
+@keyframes modal-show
+  0%
+    transform: translateY(500%)
+  60%
+    transform: translateY(-7%)
+  80%
+    transform: translateY(2%)
+  100%
+    transform: translateY(0)
+
+@keyframes modal-loading
+  0%
+    opacity: 1
+    transform scale(1)
+  50%
+    opacity: 0.5
+    transform scale(0.85)
+  100%
+    opacity: 1
+    transform scale(1)
