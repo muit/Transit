@@ -44,14 +44,14 @@ var Util = {
     },
     //rangeType => true KM / false miles
     getAreaFromPoint: function(pointLat, pointLon, range, rangeType){
-        if(!rangeType) range *= 0.621371
+        if(!rangeType) range *= 0.621371;
 
-        var latOffset = (1 / 110.54) * range
+        var latOffset = (1 / 110.54) * range;
         var lonOffset = (1 / (111.320 * Math.cos(pointLat))) * range;
 
         //return [minLat, minLon, maxLat, maxLon];
-        return [pointLat-latOffset, pointLon-lonOffset, pointLat+latOffset, pointLon+lonOffset]
-    }
+        return [pointLat-latOffset, pointLon-lonOffset, pointLat+latOffset, pointLon+lonOffset];
+    },
 }
 
 
