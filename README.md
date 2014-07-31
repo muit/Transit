@@ -17,7 +17,7 @@ Client:
 - Mobile Web - Not yet
 
 Server:
-- Database System - Not yet
+- Database System - Almost Done
 - Gtfs Reading System - Almost Done
 	
 
