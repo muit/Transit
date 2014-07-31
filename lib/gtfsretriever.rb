@@ -29,24 +29,20 @@ class GtfsRetriever
     #Station.create (id, name, lat, lon)
     Station.create(row[:stop_id], row[:stop_name], row[:stop_lat], row[:stop_lon])
   end
-
   def createService(row)
-    #Service.create (service_id, start_date, end_date, m, tu, w, th, f, sa, su )
+    #Service.create (service_id, start, end, monday, tuesday, wednesday, thursday, friday, saturday, sunday )
     Service.create (
       row[:service_id], 
       row[:start_date], 
       row[:end_date], 
-      row[:monday], 
-      row[:tuesday], 
-      row[:wednesday], 
-      row[:thursday], 
-      row[:friday], 
-      row[:saturday], 
-      row[:sunday]
-      )
-    
+      row[:monday].to_bool, 
+      row[:tuesday].to_bool, 
+      row[:wednesday].to_bool, 
+      row[:thursday].to_bool, 
+      row[:friday].to_bool, 
+      row[:saturday].to_bool, 
+      row[:sunday].to_bool)
   end
-
   def createTrip(row)
     #Need to DEBUG!
     #trip.create (trip_id, service_id, route_id)
@@ -55,7 +51,6 @@ class GtfsRetriever
     #Asotiation Service <= Trip
     Service.where(service_id: row[:service_id]).trips << trip
   end
-
   def createStoptime(row)
     #Need to DEBUG!
 
