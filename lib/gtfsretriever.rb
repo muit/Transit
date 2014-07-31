@@ -25,16 +25,16 @@ class GtfsRetriever
     GtfsReader.update_all!
   end
 
-  def createStation(row)
+  def self.createStation(row)
     #Station.create (id, name, lat, lon)
     Station.create(row[:stop_id], row[:stop_name], row[:stop_lat], row[:stop_lon])
   end
-  def createService(row)
+  def self.createService(row)
     #Service.create (service_id, start, end, monday, tuesday, wednesday, thursday, friday, saturday, sunday )
     Service.create (
       row[:service_id], 
-      row[:start_date], 
-      row[:end_date], 
+      to_date(row[:start_date]), 
+      to_date(row[:end_date]), 
       row[:monday].to_bool, 
       row[:tuesday].to_bool, 
       row[:wednesday].to_bool, 
@@ -43,7 +43,7 @@ class GtfsRetriever
       row[:saturday].to_bool, 
       row[:sunday].to_bool)
   end
-  def createTrip(row)
+  def self.createTrip(row)
     #Need to DEBUG!
     #trip.create (trip_id, service_id, route_id)
     trip = Trip.create(row[:trip_id], row[:service_id], row[:route_id])
@@ -51,16 +51,24 @@ class GtfsRetriever
     #Asotiation Service <= Trip
     Service.where(service_id: row[:service_id]).trips << trip
   end
-  def createStoptime(row)
+  def self.createStoptime(row)
     #Need to DEBUG!
 
     #Stop_times.create (station_id, trip_id, arrival, departure)
-    st = Stop_time.create(row[:stop_id], row[:trip_id], row[:arrival_time], row[:departure_time])
+    st = Stop_time.create(row[:stop_id], row[:trip_id], to_time(row[:arrival_time]), to_time(row[:departure_time]))
     
     #Asotiation Station <= Stop_time
     Station.where(stop_id: row[:stop_id]).stop_times << st
 
     #Asotiation Trip <= Stop_time
     Trip.where(trip_id: row[:trip_id]).stop_times << st
+  end
+
+  def to_date(str)
+    Date.strptime(str, "%Y%m%d")
+  end
+
+  def to_time(str)
+    Time.strptime(str, "%H:%M:%S")
   end
 end
