@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree ./desktop
+//= require same
 
 $( document ).ready(function() {
     if(window.google)
@@ -132,51 +133,3 @@ mapOptions);
         });
     }
 }
-
-var Util = {
-    createNotification: function (img, title, content){
-
-        if (Notification.permission == "granted") {
-            var n = new Notification(title, {icon: img, body: content});
-            setTimeout(function(){
-                n.close();
-            },5000);
-        }
-        else{
-            Notification.requestPermission(function(){
-                if(Notification.permission == "granted"){
-                    var n = new Notification(title, {icon: img, body: content});
-                    setTimeout(function(){
-                       n.close();
-                    },5000);
-                }
-            });
-        }
-    },
-
-    setText: function(name, text){
-        localStorage.setItem(name, text);
-    },
-
-    getText: function(name){
-        var a = localStorage.getItem(name);
-        if(a == null)
-            return "";
-        return a;
-    },
-
-    getId: function(id){
-        return document.getElementById(id);
-    },
-
-    Trigger: function(){
-        this.state = true;
-        this.get = function(){
-            var rstate = this.state;
-            this.state = false;
-            return rstate;
-        }
-    }
-}
-
-
