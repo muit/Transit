@@ -5,7 +5,6 @@ class CreateStopTimes < ActiveRecord::Migration
       t.string :trip_id
       t.time :arrival
       t.time :departure
-      t.timestamps
     end
   end
 end
