@@ -11,14 +11,17 @@ Version: Beta-0.1
 
 Changes:
 ---
+  Not Yet | Started | Almost Done | Done(Should need testing) | Working 
+
+
 Client:
 - Auto Desktop/Mobile page selection - Working
 - Desktop Web - Working (Client only)
-- Mobile Web - Not yet
+- Mobile Web - Not Yet
 
 Server:
-- Database System - Almost Done
-- Gtfs Reading System - Almost Done
+- Database Gtfs System - Done
+- Gtfs Reading System - Done
 	
 
 =======
