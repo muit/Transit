@@ -20,8 +20,8 @@ Client:
 - Mobile Web - Not Yet
 
 Server:
-- Database Gtfs System - Done
-- Gtfs Reading System - Done
+- Database Gtfs System - Working
+- Gtfs Reading System - Working
 	
 
 =======
