@@ -1,5 +1,5 @@
 class Fixnum
   def to_bool
-    (self == 0)? false : true
+    !self.zero?
   end
 end

@@ -1,4 +1,5 @@
 require "gtfs"
+require "fixnum"
 
 class GtfsRetriever
   def self.updateData
@@ -18,25 +19,25 @@ class GtfsRetriever
       source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip", {strict: false})
       puts "#Extracting ..."
       #Data Exports To DB code must be here.
-      puts "\n\n*Stations...\n"
+      puts "\n*Stations..."
       source.each_stop  {|row| createStation(row)}
-      puts "\nInserting\n"
+      puts "Inserting\n"
       insertStations
 
-      puts "\n\n*Services...\n"
+      puts "\n\n*Services..."
       source.each_calendar {|row| createService(row)}
       #calendar_dates {|row| createService(row)} <= This services are special
-      puts "\nInserting\n"
+      puts "Inserting\n"
       insertServices
 
-      puts "\n\n*Trips...\n"
+      puts "\n\n*Trips..."
       source.each_trip {|row| createTrip(row)}
-      puts "\nInserting\n"
+      puts "Inserting\n"
       insertTrips
 
-      puts "\n\n*Stations...\n"
+      puts "\n\n*Stop times..."
       source.each_stop_time {|row| createStoptime(row)}
-      puts "\nInserting\n"
+      puts "Inserting\n"
       insertStoptimes
 
       puts "#{name}imported."
@@ -90,7 +91,7 @@ class GtfsRetriever
 
   def self.createTrip(row)
     #trip.create (trip_id, service_id, route_id)
-    @@tripsInsertHash.push({trip_id: row.trip_id, service_id: row.service_id, route_id: row.route_id})
+    @@tripsInsertHash.push({trip_id: row.id, service_id: row.service_id, route_id: row.route_id})
   end
   def self.insertTrips
     trips = Trip.create(@@tripsInsertHash)
@@ -103,7 +104,7 @@ class GtfsRetriever
 
   def self.createStoptime(row)
     #Stop_times.create (station_id, trip_id, arrival, departure)
-    @@stoptimesInsertHash.push({station_id: row.id, trip_id: row.trip_id, arrival: to_time(row.arrival_time), departure: to_time(row.departure_time)})
+    @@stoptimesInsertHash.push({station_id: row.stop_id, trip_id: row.trip_id, arrival: to_time(row.arrival_time), departure: to_time(row.departure_time)})
   end
   def self.insertStoptimes
     sts = StopTime.create(@@stoptimesInsertHash)
@@ -121,6 +122,6 @@ class GtfsRetriever
   end
 
   def self.to_time(str)
-    Time.strptime(str, "%H:%M:%S")
+    Time.parse(str)
   end
 end
