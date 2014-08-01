@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20140731091927) do
   create_table "services", force: true do |t|
     t.string  "service_id"
     t.date    "start"
-    t.date    "end"
+    t.date    "endd"
     t.boolean "monday"
     t.boolean "tuesday"
     t.boolean "wednesday"

@@ -2,6 +2,11 @@ require "gtfs"
 
 class GtfsRetriever
   def self.updateData
+    @@stationsInsertHash = []
+    @@servicesInsertHash = []
+    @@tripsInsertHash = []
+    @@stoptimesInsertHash = []
+
     puts "==All local gtfs databases will be reset=="
     resetDatabase
     puts "==Started importing Gtfs Databases=="
@@ -11,24 +16,39 @@ class GtfsRetriever
       name = "madrid" #(GtfsLocations object).name
       puts "**Downloading #{name} Gtfs Zip..."
       source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip", {strict: false})
-      puts "**Extracting ..."
+      puts "#Extracting ..."
       #Data Exports To DB code must be here.
-      puts "Stations..."
+      puts "\n\n*Stations...\n"
       source.each_stop  {|row| createStation(row)}
+      puts "\nInserting\n"
+      insertStations
 
-      puts "Services..."
+      puts "\n\n*Services...\n"
       source.each_calendar {|row| createService(row)}
       #calendar_dates {|row| createService(row)} <= This services are special
+      puts "\nInserting\n"
+      insertServices
 
-      puts "Trips..."
+      puts "\n\n*Trips...\n"
       source.each_trip {|row| createtrip(row)}
+      puts "\nInserting\n"
+      insertTrips
 
-      puts "Stations..."
+      puts "\n\n*Stations...\n"
       source.each_stop_time {|row| createStoptime(row)}
+      puts "\nInserting\n"
+      insertStoptimes
 
       puts "#{name}imported."
       puts ""
     #End of bucle
+
+    #////Secure variable reset
+    @@stationsInsertHash = []
+    @@servicesInsertHash = []
+    @@tripsInsertHash = []
+    @@stoptimesInsertHash = []
+    #////
 
     puts "==All Gtfs Databases Imported=="
   end
@@ -42,49 +62,63 @@ class GtfsRetriever
 
   def self.createStation(row)
     #Station.create (stop_id, name, lat, lon)
-    Station.create({real_id: row.id, name: row.name, lat: row.lat, lon: row.lon})
-
+    @@stationsInsertHash.push({real_id: row.id, name: row.name, lat: row.lat, lon: row.lon})
   end
+  def self.insertStations
+    Station.create(@@stationsInsertHash)
+  end
+
   def self.createService(row)
     #Service.create (service_id, start, end, monday, tuesday, wednesday, thursday, friday, saturday, sunday )
-    Service.create({
+    @@servicesInsertHash.push({
       service_id: row.service_id, 
       start: to_date(row.start_date), 
-      end: to_date(row.end_date), 
+      endd: to_date(row.end_date), 
       monday: row.monday.to_bool, 
       tuesday: row.tuesday.to_bool, 
       wednesday: row.wednesday.to_bool, 
       thursday: row.thursday.to_bool, 
-      fryday: row.friday.to_bool, 
+      friday: row.friday.to_bool, 
       saturday: row.saturday.to_bool, 
       sunday: row.sunday.to_bool})
   end
+  def self.insertServices
+    Service.create(@@servicesInsertHash)
+  end
+
   def self.createTrip(row)
-    #Need to DEBUG!
     #trip.create (trip_id, service_id, route_id)
-    trip = Trip.create({trip_id: row.trip_id, service_id: row.service_id, route_id: row.route_id})
-
-    #Asotiation Service <= Trip
-    Service.where(service_id: row.service_id).trips << trip
+    @@tripsInsertHash.push({trip_id: row.trip_id, service_id: row.service_id, route_id: row.route_id})
   end
+  def self.insertTrips
+    trips = Trip.create(@@tripsInsertHash)
+
+    trips.each do |trip|
+      #Asotiation Service <= Trip
+      Service.where(service_id: trip.service_id).trips << trip
+    end
+  end
+
   def self.createStoptime(row)
-    #Need to DEBUG!
-
     #Stop_times.create (station_id, trip_id, arrival, departure)
-    st = StopTime.create({station_id: row.id, trip_id: row.trip_id, arrival: to_time(row.arrival_time), departure: to_time(row.departure_time)})
-    
-    #Asotiation Station <= Stop_time
-    Station.where(stop_id: row.id).stop_times << st
+    @@stoptimesInsertHash.push({station_id: row.id, trip_id: row.trip_id, arrival: to_time(row.arrival_time), departure: to_time(row.departure_time)})
+  end
+  def self.insertStoptimes
+    sts = StopTime.create(@@stoptimesInsertHash)
 
-    #Asotiation Trip <= Stop_time
-    Trip.where(trip_id: row.trip_id).stop_times << st
+    sts.each do |st|
+      #Asotiation Station <= Stop_time
+      Station.where(stop_id: st.station_id).stop_times << st
+      #Asotiation Trip <= Stop_time
+      Trip.where(trip_id: st.trip_id).stop_times << st
+    end
   end
 
-  def to_date(str)
+  def self.to_date(str)
     Date.strptime(str, "%Y%m%d")
   end
 
-  def to_time(str)
+  def self.to_time(str)
     Time.strptime(str, "%H:%M:%S")
   end
 end
