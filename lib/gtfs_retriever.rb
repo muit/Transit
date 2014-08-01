@@ -30,7 +30,7 @@ class GtfsRetriever
       insertServices
 
       puts "\n\n*Trips...\n"
-      source.each_trip {|row| createtrip(row)}
+      source.each_trip {|row| createTrip(row)}
       puts "\nInserting\n"
       insertTrips
 
@@ -58,6 +58,8 @@ class GtfsRetriever
     Service.destroy_all
     Trip.destroy_all
     StopTime.destroy_all
+
+    #Need to implement ID auto_increment reset
   end
 
   def self.createStation(row)
@@ -74,13 +76,13 @@ class GtfsRetriever
       service_id: row.service_id, 
       start: to_date(row.start_date), 
       endd: to_date(row.end_date), 
-      monday: row.monday.to_bool, 
-      tuesday: row.tuesday.to_bool, 
-      wednesday: row.wednesday.to_bool, 
-      thursday: row.thursday.to_bool, 
-      friday: row.friday.to_bool, 
-      saturday: row.saturday.to_bool, 
-      sunday: row.sunday.to_bool})
+      monday: row.monday.to_i.to_bool, 
+      tuesday: row.tuesday.to_i.to_bool, 
+      wednesday: row.wednesday.to_i.to_bool, 
+      thursday: row.thursday.to_i.to_bool, 
+      friday: row.friday.to_i.to_bool, 
+      saturday: row.saturday.to_i.to_bool, 
+      sunday: row.sunday.to_i.to_bool})
   end
   def self.insertServices
     Service.create(@@servicesInsertHash)
