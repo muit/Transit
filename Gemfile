@@ -26,7 +26,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 # GTFS Zip Reader
-gem 'gtfs-reader', '~> 0.2.8'
+gem 'gtfs', '~> 0.2.3'
 
 group :production do
   gem 'rails_12factor'

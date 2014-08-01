@@ -11,16 +11,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140728105950) do
+ActiveRecord::Schema.define(version: 20140731091927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "projects", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "description"
+  create_table "services", force: true do |t|
+    t.string  "service_id"
+    t.date    "start"
+    t.date    "end"
+    t.boolean "monday"
+    t.boolean "tuesday"
+    t.boolean "wednesday"
+    t.boolean "thursday"
+    t.boolean "friday"
+    t.boolean "saturday"
+    t.boolean "sunday"
+  end
+
+  create_table "stations", force: true do |t|
+    t.integer "real_id"
+    t.string  "name"
+    t.float   "lat"
+    t.float   "lon"
+  end
+
+  create_table "stop_times", force: true do |t|
+    t.integer "station_id"
+    t.string  "trip_id"
+    t.time    "arrival"
+    t.time    "departure"
+  end
+
+  create_table "trips", force: true do |t|
+    t.string  "trip_id"
+    t.string  "service_id"
+    t.integer "route_id"
   end
 
 end
