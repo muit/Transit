@@ -96,9 +96,10 @@ class GtfsRetriever
   def self.insertTrips
     trips = Trip.create(@@tripsInsertHash)
 
+    service = Service.where(service_id: trip.service_id).first
     trips.each do |trip|
       #Asotiation Service <= Trip
-      Service.where(service_id: trip.service_id).first.trips << trip
+      service.trips << trip
     end
   end
 
@@ -109,11 +110,13 @@ class GtfsRetriever
   def self.insertStoptimes
     sts = StopTime.create(@@stoptimesInsertHash)
 
+    station = Station.where(stop_id: st.station_id).first
+    trip = Trip.where(trip_id: st.trip_id).first
     sts.each do |st|
       #Asotiation Station <= Stop_time
-      Station.where(stop_id: st.station_id).first.stop_times << st
+      station.stop_times << st
       #Asotiation Trip <= Stop_time
-      Trip.where(trip_id: st.trip_id).first.stop_times << st
+      trip.stop_times << st
     end
   end
 
