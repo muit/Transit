@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(version: 20140731091927) do
   create_table "stop_times", force: true do |t|
     t.integer "station_id"
     t.string  "trip_id"
-    t.time    "arrival"
-    t.time    "departure"
+    t.string  "arrival"
+    t.string  "departure"
   end
 
   create_table "trips", force: true do |t|

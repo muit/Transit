@@ -16,7 +16,7 @@ class GtfsRetriever
     #Bucle whit all databases in model GtfsLocations
       name = "madrid" #(GtfsLocations object).name
       puts "**Downloading #{name} Gtfs Zip..."
-      source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip")
+      source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip", {strict: false})
       puts "#Extracting ..."
       #Data Exports To DB code must be here.
       if stations
@@ -96,7 +96,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount >= 50000
+    if @@antiFreezeCount >= 100000
       insertStations
       emptyCache
       puts ""
@@ -125,7 +125,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount > 50000
+    if @@antiFreezeCount > 100000
       insertServices
       emptyCache
     end
@@ -143,7 +143,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount > 50000
+    if @@antiFreezeCount > 100000
       insertTrips
       emptyCache
     end
@@ -176,7 +176,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount > 50000
+    if @@antiFreezeCount > 100000
       insertStoptimes
       emptyCache
     end
