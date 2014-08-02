@@ -98,7 +98,7 @@ class GtfsRetriever
 
     trips.each do |trip|
       #Asotiation Service <= Trip
-      Service.where(service_id: trip.service_id).trips << trip
+      Service.where(service_id: trip.service_id).first.trips << trip
     end
   end
 
@@ -111,9 +111,9 @@ class GtfsRetriever
 
     sts.each do |st|
       #Asotiation Station <= Stop_time
-      Station.where(stop_id: st.station_id).stop_times << st
+      Station.where(stop_id: st.station_id).first.stop_times << st
       #Asotiation Trip <= Stop_time
-      Trip.where(trip_id: st.trip_id).stop_times << st
+      Trip.where(trip_id: st.trip_id).first.stop_times << st
     end
   end
 
