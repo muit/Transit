@@ -2,14 +2,13 @@ require "gtfs"
 require "fixnum"
 
 class GtfsRetriever
-  def self.updateData
+  def self.updateData(stations = true, services = true, trips = true, stoptimes = true)
     @@stationsInsertHash = []
     @@servicesInsertHash = []
     @@tripsInsertHash = []
     @@stoptimesInsertHash = []
 
     puts "==All local gtfs databases will be reset=="
-    resetDatabase
     puts "==Started importing Gtfs Databases=="
     puts ""
 
@@ -19,26 +18,54 @@ class GtfsRetriever
       source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip", {strict: false})
       puts "#Extracting ..."
       #Data Exports To DB code must be here.
-      puts "\n*Stations..."
-      source.each_stop  {|row| createStation(row)}
-      puts "Inserting\n"
-      insertStations
+      if stations
+        puts "\n*Stations..."
+        puts "Clearing"
+        Station.destroy_all
 
-      puts "\n\n*Services..."
-      source.each_calendar {|row| createService(row)}
-      #calendar_dates {|row| createService(row)} <= This services are special
-      puts "Inserting\n"
-      insertServices
+        source.each_stop  {|row| createStation(row)}
+        puts "Inserting\n"
+        insertStations
+      else
+        puts "\n*Stations skipped"
+      end
 
-      puts "\n\n*Trips..."
-      source.each_trip {|row| createTrip(row)}
-      puts "Inserting\n"
-      insertTrips
+      if services
+        puts "\n\n*Services..."
+        puts "Clearing"
+        Service.destroy_all
 
-      puts "\n\n*Stop times..."
-      source.each_stop_time {|row| createStoptime(row)}
-      puts "Inserting\n"
-      insertStoptimes
+        source.each_calendar {|row| createService(row)}
+        #calendar_dates {|row| createService(row)} <= This services are special
+        puts "Inserting\n"
+        insertServices
+      else
+        puts "\n*Services skipped"
+      end
+
+      if trips
+        puts "\n\n*Trips..."
+        puts "Clearing"
+        Trip.destroy_all
+
+        source.each_trip {|row| createTrip(row)}
+        puts "Inserting\n"
+        insertTrips
+      else
+        puts "\n*Services skipped"
+      end
+
+      if stoptimes
+        puts "\n\n*Stop times..."
+        puts "Clearing"
+        StopTime.destroy_all
+
+        source.each_stop_time {|row| createStoptime(row)}
+        puts "Inserting\n"
+        insertStoptimes
+      else
+        puts "\n*Stop times skipped"
+      end
 
       puts "#{name}imported."
       puts ""
@@ -54,39 +81,36 @@ class GtfsRetriever
     puts "==All Gtfs Databases Imported=="
   end
 
-  def self.resetDatabase
-    Station.destroy_all
-    Service.destroy_all
-    Trip.destroy_all
-    StopTime.destroy_all
-
-    #Need to implement ID auto_increment reset
-  end
-
   def self.createStation(row)
     #Station.create (stop_id, name, lat, lon)
     @@stationsInsertHash.push({real_id: row.id, name: row.name, lat: row.lat, lon: row.lon})
   end
   def self.insertStations
-    Station.create(@@stationsInsertHash)
+    ActiveRecord::Base.transaction do
+      Station.create(@@stationsInsertHash)
+    end
   end
 
   def self.createService(row)
-    #Service.create (service_id, start, end, monday, tuesday, wednesday, thursday, friday, saturday, sunday )
-    @@servicesInsertHash.push({
-      service_id: row.service_id, 
-      start: to_date(row.start_date), 
-      endd: to_date(row.end_date), 
-      monday: row.monday.to_i.to_bool, 
-      tuesday: row.tuesday.to_i.to_bool, 
-      wednesday: row.wednesday.to_i.to_bool, 
-      thursday: row.thursday.to_i.to_bool, 
-      friday: row.friday.to_i.to_bool, 
-      saturday: row.saturday.to_i.to_bool, 
-      sunday: row.sunday.to_i.to_bool})
+    ActiveRecord::Base.transaction do
+      #Service.create (service_id, start, end, monday, tuesday, wednesday, thursday, friday, saturday, sunday )
+      @@servicesInsertHash.push({
+        service_id: row.service_id, 
+        start: to_date(row.start_date), 
+        endd: to_date(row.end_date), 
+        monday: row.monday.to_i.to_bool, 
+        tuesday: row.tuesday.to_i.to_bool, 
+        wednesday: row.wednesday.to_i.to_bool, 
+        thursday: row.thursday.to_i.to_bool, 
+        friday: row.friday.to_i.to_bool, 
+        saturday: row.saturday.to_i.to_bool, 
+        sunday: row.sunday.to_i.to_bool})
+    end
   end
   def self.insertServices
-    Service.create(@@servicesInsertHash)
+    ActiveRecord::Base.transaction do
+      Service.create(@@servicesInsertHash)
+    end
   end
 
   def self.createTrip(row)
@@ -94,12 +118,18 @@ class GtfsRetriever
     @@tripsInsertHash.push({trip_id: row.id, service_id: row.service_id, route_id: row.route_id})
   end
   def self.insertTrips
-    trips = Trip.create(@@tripsInsertHash)
+    ActiveRecord::Base.transaction do
+      trips = Trip.create(@@tripsInsertHash)
 
-    service = Service.where(service_id: trip.service_id).first
-    trips.each do |trip|
-      #Asotiation Service <= Trip
-      service.trips << trip
+      lastTrip = trips.first
+      service = Service.where(service_id: lastTrip.service_id).first
+
+      trips.each do |trip|
+        service = Service.where(service_id: trip.service_id).first if trip.service_id != lastTrip.service_id
+        #Asotiation Service <= Trip
+        service.trips << trip
+        lastTrip = trip
+      end
     end
   end
 
@@ -108,15 +138,23 @@ class GtfsRetriever
     @@stoptimesInsertHash.push({station_id: row.stop_id, trip_id: row.trip_id, arrival: to_time(row.arrival_time), departure: to_time(row.departure_time)})
   end
   def self.insertStoptimes
-    sts = StopTime.create(@@stoptimesInsertHash)
+    ActiveRecord::Base.transaction do
+      sts = StopTime.create(@@stoptimesInsertHash)
 
-    station = Station.where(stop_id: st.station_id).first
-    trip = Trip.where(trip_id: st.trip_id).first
-    sts.each do |st|
-      #Asotiation Station <= Stop_time
-      station.stop_times << st
-      #Asotiation Trip <= Stop_time
-      trip.stop_times << st
+      lastSt = sts.first
+      station = Station.where(stop_id: lastSt.station_id).first
+      trip = Trip.where(trip_id: lastSt.trip_id).first
+
+      sts.each do |st|
+        station = Station.where(stop_id: st.station_id).first if st.station_id != lastSt.station_id
+        trip = Trip.where(trip_id: st.trip_id).first if st.trip_id != lastSt.trip_id
+
+        #Asotiation Station <= Stop_time
+        station.stop_times << st
+        #Asotiation Trip <= Stop_time
+        trip.stop_times << st
+        lastSt = st
+      end
     end
   end
 
