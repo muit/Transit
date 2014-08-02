@@ -1,12 +1,13 @@
 require "gtfs"
 require "fixnum"
+require "activerecord-import/base"
 
 class GtfsRetriever
   def self.updateData(stations = true, services = true, trips = true, stoptimes = true)
-    @@stationsInsertHash = []
-    @@servicesInsertHash = []
-    @@tripsInsertHash = []
-    @@stoptimesInsertHash = []
+    setup
+
+    @@count = 0
+    emptyCache
 
     puts "==All local gtfs databases will be reset=="
     puts "==Started importing Gtfs Databases=="
@@ -15,54 +16,57 @@ class GtfsRetriever
     #Bucle whit all databases in model GtfsLocations
       name = "madrid" #(GtfsLocations object).name
       puts "**Downloading #{name} Gtfs Zip..."
-      source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip", {strict: false})
+      source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip")
       puts "#Extracting ..."
       #Data Exports To DB code must be here.
       if stations
+        @@count = 0
         puts "\n*Stations..."
         puts "Clearing"
-        Station.destroy_all
-
+        Station.delete_all
+        puts "Loading\n"
         source.each_stop  {|row| createStation(row)}
-        puts "Inserting\n"
         insertStations
+        emptyCache
       else
         puts "\n*Stations skipped"
       end
 
       if services
+        @@count = 0
         puts "\n\n*Services..."
         puts "Clearing"
-        Service.destroy_all
-
+        Service.delete_all
+        puts "Loading\n"
         source.each_calendar {|row| createService(row)}
         #calendar_dates {|row| createService(row)} <= This services are special
-        puts "Inserting\n"
         insertServices
+      emptyCache
       else
         puts "\n*Services skipped"
       end
 
       if trips
+        @@count = 0
         puts "\n\n*Trips..."
         puts "Clearing"
-        Trip.destroy_all
-
+        Trip.delete_all
+        puts "Loading\n"
         source.each_trip {|row| createTrip(row)}
-        puts "Inserting\n"
         insertTrips
+        emptyCache
       else
         puts "\n*Services skipped"
       end
-
       if stoptimes
+        @@count = 0
         puts "\n\n*Stop times..."
         puts "Clearing"
-        StopTime.destroy_all
-
+        StopTime.delete_all
+        puts "Loading\n"
         source.each_stop_time {|row| createStoptime(row)}
-        puts "Inserting\n"
         insertStoptimes
+        emptyCache
       else
         puts "\n*Stop times skipped"
       end
@@ -76,86 +80,132 @@ class GtfsRetriever
     @@servicesInsertHash = []
     @@tripsInsertHash = []
     @@stoptimesInsertHash = []
+    @@antiFreezeCount = nil
+    @@count = nil
     #////
 
     puts "==All Gtfs Databases Imported=="
+
   end
 
   def self.createStation(row)
     #Station.create (stop_id, name, lat, lon)
-    @@stationsInsertHash.push({real_id: row.id, name: row.name, lat: row.lat, lon: row.lon})
+    @@stationsInsertHash.push([row.id, row.name, row.lat, row.lon])
+    print "\r"
+    print "Station: #{@@count}"
+    @@count += 1
+    @@antiFreezeCount += 1
+
+    if @@antiFreezeCount >= 50000
+      insertStations
+      emptyCache
+      puts ""
+    end
   end
   def self.insertStations
-    ActiveRecord::Base.transaction do
-      Station.create(@@stationsInsertHash)
-    end
+    puts "\nInserting\n"
+    Station.import [:real_id, :name, :lat, :lon], @@stationsInsertHash, :validate => false
   end
 
   def self.createService(row)
-    ActiveRecord::Base.transaction do
-      #Service.create (service_id, start, end, monday, tuesday, wednesday, thursday, friday, saturday, sunday )
-      @@servicesInsertHash.push({
-        service_id: row.service_id, 
-        start: to_date(row.start_date), 
-        endd: to_date(row.end_date), 
-        monday: row.monday.to_i.to_bool, 
-        tuesday: row.tuesday.to_i.to_bool, 
-        wednesday: row.wednesday.to_i.to_bool, 
-        thursday: row.thursday.to_i.to_bool, 
-        friday: row.friday.to_i.to_bool, 
-        saturday: row.saturday.to_i.to_bool, 
-        sunday: row.sunday.to_i.to_bool})
+    #Service.create (service_id, start, end, monday, tuesday, wednesday, thursday, friday, saturday, sunday )
+    @@servicesInsertHash.push([
+      row.service_id, 
+      to_date(row.start_date), 
+      to_date(row.end_date), 
+      row.monday.to_i.to_bool, 
+      row.tuesday.to_i.to_bool, 
+      row.wednesday.to_i.to_bool, 
+      row.thursday.to_i.to_bool, 
+      row.friday.to_i.to_bool, 
+      row.saturday.to_i.to_bool, 
+      row.sunday.to_i.to_bool])
+    print "\r"
+    print "Service: #{@@count}"
+    @@count += 1
+    @@antiFreezeCount += 1
+
+    if @@antiFreezeCount > 50000
+      insertServices
+      emptyCache
     end
   end
   def self.insertServices
-    ActiveRecord::Base.transaction do
-      Service.create(@@servicesInsertHash)
-    end
+    puts "\nInserting\n"
+    Service.import [:service_id, :start, :endd, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday], @@servicesInsertHash, :validate => false
   end
 
   def self.createTrip(row)
     #trip.create (trip_id, service_id, route_id)
-    @@tripsInsertHash.push({trip_id: row.id, service_id: row.service_id, route_id: row.route_id})
+    @@tripsInsertHash.push([row.id, row.service_id, row.route_id.to_i])
+    print "\r"
+    print "Trip: #{@@count}"
+    @@count += 1
+    @@antiFreezeCount += 1
+
+    if @@antiFreezeCount > 50000
+      insertTrips
+      emptyCache
+    end
   end
   def self.insertTrips
-    ActiveRecord::Base.transaction do
-      trips = Trip.create(@@tripsInsertHash)
+    puts "\nInserting\n"
+    Trip.import [:trip_id, :service_id, :route_id], @@tripsInsertHash, :validate => false
 
-      lastTrip = trips.first
-      service = Service.where(service_id: lastTrip.service_id).first
+    #Associations killing performance. Temporarily disabled
+    #lastTrip = Trip.first
+    #service = Service.where(service_id: lastTrip.service_id).first
 
-      trips.each do |trip|
-        service = Service.where(service_id: trip.service_id).first if trip.service_id != lastTrip.service_id
+    #services = Service.all
+    #trips = Trip.all
+    #ActiveRecord::Base.transaction do
+      #trips.each do |trip|
+        #service = Service.select {|sv| sv["service_id"] == trip.service_id}.first if trip.service_id != lastTrip.service_id
         #Asotiation Service <= Trip
-        service.trips << trip
-        lastTrip = trip
-      end
-    end
+        #service.trips << trip
+        #lastTrip = trip
+      #end
+    #end
   end
 
   def self.createStoptime(row)
     #Stop_times.create (station_id, trip_id, arrival, departure)
-    @@stoptimesInsertHash.push({station_id: row.stop_id, trip_id: row.trip_id, arrival: to_time(row.arrival_time), departure: to_time(row.departure_time)})
+    @@stoptimesInsertHash.push([row.stop_id, row.trip_id, row.arrival_time, row.departure_time])
+    print "\r"
+    print "StopTime: #{@@count}"
+    @@count += 1
+    @@antiFreezeCount += 1
+
+    if @@antiFreezeCount > 50000
+      insertStoptimes
+      emptyCache
+    end
   end
   def self.insertStoptimes
-    ActiveRecord::Base.transaction do
-      sts = StopTime.create(@@stoptimesInsertHash)
-
-      lastSt = sts.first
-      station = Station.where(stop_id: lastSt.station_id).first
-      trip = Trip.where(trip_id: lastSt.trip_id).first
-
-      sts.each do |st|
-        station = Station.where(stop_id: st.station_id).first if st.station_id != lastSt.station_id
-        trip = Trip.where(trip_id: st.trip_id).first if st.trip_id != lastSt.trip_id
+    puts "\nInserting\n"
+    StopTime.import [:station_id, :trip_id, :arrival, :departure], @@stoptimesInsertHash, :validate => false
+    
+    #Associations killing performance. Temporarily disabled
+    #lastSt = Stoptime.first
+    #station = Station.where(stop_id: lastSt.station_id).first
+    #trip = Trip.where(trip_id: lastSt.trip_id).first
+    #sts = Stoptime.all
+    #ActiveRecord::Base.transaction do
+      #sts.each do |st|
+        #station = Station.where(stop_id: st.station_id).first if st.station_id != lastSt.station_id
+        #trip = Trip.where(trip_id: st.trip_id).first if st.trip_id != lastSt.trip_id
 
         #Asotiation Station <= Stop_time
-        station.stop_times << st
+        #station.stop_times << st
         #Asotiation Trip <= Stop_time
-        trip.stop_times << st
-        lastSt = st
-      end
-    end
+        #trip.stop_times << st
+        #lastSt = st
+      #end
+    #end
+  end
+
+  def self.setup
+    ActiveRecord::Import.require_adapter( ActiveRecord::Base.configurations[Rails.env]["adapter"] )
   end
 
   def self.to_date(str)
@@ -163,6 +213,30 @@ class GtfsRetriever
   end
 
   def self.to_time(str)
-    Time.parse(str)
+    parse(str)
+  end
+
+  def self.parse(str, now=now)
+    date_parts = Date._parse(str)
+    return if date_parts.blank?
+    time = Time.parse(str, now) rescue DateTime.parse(str)
+    if date_parts[:offset].nil?
+      ActiveSupport::TimeWithZone.new(nil, self, time)
+    else
+      time.in_time_zone(self)
+    end
+  end
+
+  def self.emptyCache
+    @@antiFreezeCount = 0
+    @@stationsInsertHash = []
+    @@servicesInsertHash = []
+    @@tripsInsertHash = []
+    @@stoptimesInsertHash = []
+  end
+
+  def self.newState
+    @@count = 0
+    @@antiFreezeCount = 0
   end
 end

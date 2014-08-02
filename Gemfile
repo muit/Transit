@@ -28,6 +28,9 @@ gem 'spring',        group: :development
 # GTFS Zip Reader
 gem 'gtfs', '~> 0.2.3'
 
+# Activerecords-import
+gem 'activerecord-import', '~> 0.5.0'
+
 group :production do
   gem 'rails_12factor'
 end
