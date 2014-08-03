@@ -240,3 +240,17 @@ class GtfsRetriever
     @@antiFreezeCount = 0
   end
 end
+
+#hackfix
+module GTFS
+  module Model
+    def initialize(attrs)
+      attrs.each do |key, val|
+        if(key == "trip_id")
+          puts val
+        end
+        instance_variable_set("@#{key}", val)
+      end
+    end
+  end
+end
