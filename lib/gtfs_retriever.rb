@@ -3,9 +3,9 @@ require "fixnum"
 require "activerecord-import/base"
 
 class GtfsRetriever
-  def self.updateData(stations = true, services = true, trips = true, stoptimes = true)
+  def self.updateData(cacheLenght = 100000, stations = true, services = true, trips = true, stoptimes = true)
     setup
-
+    @@cacheLenght = cacheLenght
     @@count = 0
     emptyCache
 
@@ -82,6 +82,7 @@ class GtfsRetriever
     @@stoptimesInsertHash = []
     @@antiFreezeCount = nil
     @@count = nil
+    @@cacheLenght = nil
     #////
 
     puts "==All Gtfs Databases Imported=="
@@ -96,7 +97,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount >= 100000
+    if @@antiFreezeCount >= @@cacheLenght
       insertStations
       emptyCache
       puts ""
@@ -125,7 +126,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount > 100000
+    if @@antiFreezeCount >= @@cacheLenght
       insertServices
       emptyCache
     end
@@ -143,7 +144,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount > 100000
+    if @@antiFreezeCount >= @@cacheLenght
       insertTrips
       emptyCache
     end
@@ -176,7 +177,7 @@ class GtfsRetriever
     @@count += 1
     @@antiFreezeCount += 1
 
-    if @@antiFreezeCount > 100000
+    if @@antiFreezeCount >= @@cacheLenght
       insertStoptimes
       emptyCache
     end
