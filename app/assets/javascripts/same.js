@@ -57,7 +57,7 @@ var Util = {
 
         var latOffset = (1 / 110.54) * range;
         var lonOffset = (1 / (111.320 * Math.cos(pointLat))) * range;
-
+        console.log(latOffset);
         //returns {minLat, minLon, maxLat, maxLon};
         return {
             minLat: pointLat-latOffset,
@@ -70,6 +70,7 @@ var Util = {
 
 var MapSystem = {
     me: undefined,
+    area: undefined,
     loadMap: function(){
         var mapOptions = {
             zoom: 5
@@ -82,7 +83,10 @@ mapOptions);
     },
     locateMe: function(){
         navigator.geolocation.getCurrentPosition(function(position) {
+            var range = 1
             var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            this.area = Util.getAreaFromPoint(position.coords.latitude, position.coords.longitude, range);
+            console.log(this.area);
             if(this.me)
                 this.me.close();
 
@@ -94,6 +98,9 @@ mapOptions);
 
             map.setCenter(pos);
             map.setOptions({zoom: 15});
+
+            //StationsSystem
+            Station.getNear(this.area);
         }, function() {
             Util.createNotification("","", "GeoLocation no obtuvo permiso, o produjo un error.");
         });
@@ -108,7 +115,7 @@ var Station = {
     getInfo: function(id, from_time, to_time){
         Util.showLoading(true);
 
-        $.post('/data/stations/'+id+'/info', { from_time: from_time, to_time: from_time}, 
+        $.post('/stations/'+id+'/info', { from_time: from_time, to_time: from_time}, 
         function(data){
             var object = JSON.parse(data);
 
@@ -129,18 +136,20 @@ var Station = {
         //area = {minLat, minLon, maxLat, maxLon}
         var self = this;
 
-        $.get('/data/stations', area, 
+        $.get('/stations', area, 
             function(data){
-                self.list = JSON.parse(data);
+                console.log(data);
+                self.list = data;
 
-                $.each(this.list, function( i, station ) {
-                    self.markersArray.push(createMarker(station.name, station.lat, station.lon));
+                $.each(self.list, function( i, station ) {
+                    self.markersArray.push(self.createMarker(station.name, station.lat, station.lon));
                 });
             }, "json"
         );
     },
     createMarker: function(title, lat, lon){
         var pos = new google.maps.LatLng(lat, lon);
+        var self = this;
 
         var marker = new google.maps.Marker({
             position: pos,
@@ -152,16 +161,16 @@ var Station = {
             for(var i = 0, len = Station.list.length; i < len; i++)
                 if(Station.list[i].name == marker.title){
                     selected = Station.list[i];
-                    showStation(Station.list[i]);
+                    self.showStation(Station.list[i]);
                 }
         });
 
         return  marker
     },
 
-    showStation: function(station = this.list[0]){
-        if !station
-            return "There´s no any station"
+    showStation: function(station){
+        if(typeof(station)==='undefined') station = this.list[0];
+        if(!station) return "There´s no any station";
 
         $("#timetable").addClass("active");
     }

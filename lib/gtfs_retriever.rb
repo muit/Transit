@@ -71,7 +71,7 @@ class GtfsRetriever
         puts "\n*Stop times skipped"
       end
 
-      puts "#{name}imported."
+      puts "\n#{name} imported successfully."
       puts ""
     #End of bucle
 
