@@ -18,6 +18,7 @@ Client:
 - Auto Desktop/Mobile page selection - Working
 - Desktop Web - Working (Client only)
 - Mobile Web - Not Yet
+- Near Stations Algorithm - Working
 
 Server:
 - Database Gtfs System - Working
