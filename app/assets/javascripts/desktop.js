@@ -32,8 +32,7 @@ $( document ).ready(function() {
             $("#controlmenu").removeClass("active");
             break;
         case "asidebutton":
-            //Station.showStation(Station.selected);
-            $("#timetable").addClass("active");
+            if(Station.selected) $("#timetable").addClass("active");
             break;
         case "menuasidebutton":
             $("#controlmenu").addClass("active");

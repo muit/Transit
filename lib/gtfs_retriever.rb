@@ -16,7 +16,7 @@ class GtfsRetriever
     #Bucle whit all databases in model GtfsLocations
       name = "madrid" #(GtfsLocations object).name
       puts "**Downloading #{name} Gtfs Zip..."
-      source = GTFS::Source.build("https://servicios.emtmadrid.es:8443/gtfs/transitemt.zip", {strict: false})
+      source = GTFS::Source.build("http://gtfs.s3.amazonaws.com/informacin-oficial-consorcio-regional-de-transportes-de-madrid_20110818_0819.zip", {strict: false})
       puts "#Extracting ..."
       #Data Exports To DB code must be here.
       if stations

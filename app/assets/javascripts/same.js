@@ -57,7 +57,6 @@ var Util = {
 
         var latOffset = (1 / 110.54) * range;
         var lonOffset = (1 / (111.320 * Math.cos(pointLat))) * range;
-        console.log(latOffset);
         //returns {minLat, minLon, maxLat, maxLon};
         return {
             minLat: pointLat-latOffset,
@@ -86,7 +85,7 @@ mapOptions);
             var range = 1
             var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
             this.area = Util.getAreaFromPoint(position.coords.latitude, position.coords.longitude, range);
-            console.log(this.area);
+
             if(this.me)
                 this.me.close();
 
@@ -159,8 +158,11 @@ var Station = {
         google.maps.event.addListener(marker, 'click', function(){
             for(var i = 0, len = self.list.length; i < len; i++)
                 if(self.list[i].name == marker.title){
+                    if(self.list[i] != this.selected)
+                        self.showStation(self.selected);
+
                     self.selected = self.list[i];
-                    self.showStation(self.list[i]);
+                    break;
                 }
         });
 
@@ -171,7 +173,17 @@ var Station = {
         if(typeof(station)==='undefined') station = this.list[0];
         if(!station) return "There´s no any station";
 
-        $("#stationNameShow").text(station.name);
-        $("#timetable").addClass("active");
+        if ($("#timetable").hasClass("active")){
+            $("#timetable").removeClass("active");
+            setTimeout(function(){
+                $("#stationNameShow").text(station.name);
+                $("#timetable").addClass("active");
+            }, 500);
+        }
+        else
+        {
+            $("#stationNameShow").text(station.name);
+            $("#timetable").addClass("active");
+        }
     }
 }
