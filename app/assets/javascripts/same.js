@@ -97,7 +97,7 @@ mapOptions);
             });
 
             map.setCenter(pos);
-            map.setOptions({zoom: 15});
+            map.setOptions({zoom: 16});
 
             //StationsSystem
             Station.getNear(this.area);
@@ -138,7 +138,6 @@ var Station = {
 
         $.get('/stations', area, 
             function(data){
-                console.log(data);
                 self.list = data;
 
                 $.each(self.list, function( i, station ) {
@@ -158,10 +157,10 @@ var Station = {
         });
 
         google.maps.event.addListener(marker, 'click', function(){
-            for(var i = 0, len = Station.list.length; i < len; i++)
-                if(Station.list[i].name == marker.title){
-                    selected = Station.list[i];
-                    self.showStation(Station.list[i]);
+            for(var i = 0, len = self.list.length; i < len; i++)
+                if(self.list[i].name == marker.title){
+                    self.selected = self.list[i];
+                    self.showStation(self.list[i]);
                 }
         });
 
@@ -172,6 +171,7 @@ var Station = {
         if(typeof(station)==='undefined') station = this.list[0];
         if(!station) return "There´s no any station";
 
+        $("#stationNameShow").text(station.name);
         $("#timetable").addClass("active");
     }
 }
