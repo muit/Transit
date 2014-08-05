@@ -63,11 +63,22 @@ var MapSystem = {
     area: undefined,
     loadMap: function(){
         var mapOptions = {
+            disableDoubleClickZoom: true,
             zoom: 5,
             panControl: false,
             rotateControl: false,
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                position: google.maps.ControlPosition.BOTTOM_LEFT
+            },
+            zoomControl: true,
             maxZoom: 19,
             minZoom: 10,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.LARGE,
+                position: google.maps.ControlPosition.LEFT_CENTER
+            },
             streetViewControl: false,
         };
 
