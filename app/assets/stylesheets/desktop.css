@@ -29,7 +29,9 @@ body {
 #map-canvas {
     background-color: #000;
     opacity: 0.9;
-    height: 384px;
+    height: 400px; 
+    position: relative;
+    margin-top: 0em;
     margin-bottom: 2.5em;
     text-align: center;
 }
