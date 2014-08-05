@@ -158,7 +158,7 @@ var Station = {
         google.maps.event.addListener(marker, 'click', function(){
             for(var i = 0, len = self.list.length; i < len; i++)
                 if(self.list[i].name == marker.title){
-                    if(self.list[i] != this.selected)
+                    if(self.list[i] != self.selected)
                         self.showStation(self.selected);
 
                     self.selected = self.list[i];
