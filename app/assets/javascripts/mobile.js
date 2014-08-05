@@ -14,3 +14,10 @@
 //= require jquery_ujs
 //= require_tree ./mobile
 //= require same
+
+var Visual = {
+    showStationTimes: function(times){
+    },
+    clearTimes: function(){
+    },
+}

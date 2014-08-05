@@ -138,7 +138,7 @@ class GtfsRetriever
 
   def self.createTrip(row)
     #trip.create (trip_id, service_id, route_id)
-    @@tripsInsertHash.push([row.id, row.service_id, row.route_id.to_i])
+    @@tripsInsertHash.push([row.id, row.service_id, row.trip_headsign])
     print "\r"
     print "Trip: #{@@count}"
     @@count += 1
@@ -151,7 +151,7 @@ class GtfsRetriever
   end
   def self.insertTrips
     puts "\nInserting\n"
-    Trip.import [:trip_id, :service_id, :route_id], @@tripsInsertHash, :validate => false
+    Trip.import [:trip_id, :service_id, :headsign], @@tripsInsertHash, :validate => false
 
     #Associations killing performance. Temporarily disabled
     #lastTrip = Trip.first

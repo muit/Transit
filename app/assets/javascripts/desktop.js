@@ -69,3 +69,15 @@ $( document ).ready(function() {
         }
     });
 });
+
+var Visual = {
+    showStationTimes: function(times){
+        var box = $(".timetablebox")
+        times.forEach(function(time){
+            box.append("<div class='anchor timetablevalue bck light'>"+time.arrival+" - "+time.headsign+"</div>");
+        });
+    },
+    clearTimes: function(){
+        $(".timetablebox").html("");
+    },
+}

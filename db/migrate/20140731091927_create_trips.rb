@@ -3,7 +3,7 @@ class CreateTrips < ActiveRecord::Migration
     create_table :trips do |t|
       t.string :trip_id
       t.string :service_id
-      t.integer :route_id
+      t.string :headsign
     end
   end
 end

@@ -31,6 +31,10 @@ gem 'gtfs', '~> 0.2.3'
 # Activerecords-import
 gem 'activerecord-import', '~> 0.5.0'
 
+group :development do
+  gem 'pry-rails', '~> 0.3.2'
+end
+
 group :production do
   gem 'rails_12factor'
 end
