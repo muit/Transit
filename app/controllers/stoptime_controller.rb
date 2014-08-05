@@ -7,6 +7,6 @@ class StoptimeController < ApplicationController
   end
 
   def getTripName(trip_id)
-    return Trip.where(trip_id: trip_id).first.headsign
+    Trip.where(trip_id: trip_id).first.headsign
   end
 end

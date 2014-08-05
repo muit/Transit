@@ -80,4 +80,16 @@ var Visual = {
     clearTimes: function(){
         $(".timetablebox").html("");
     },
+
+    showLoading: function(value){
+        if(value){
+            $("#loadStationData").css("display", "block");
+            $("#loadStationData").css("background-color", "rgba(0,0,0,0.8)");
+        }else{ 
+            $("#loadStationData").css("display", "none");
+            $("#loadStationData").css("background-color", "rgba(0,0,0,0.0)");
+        }
+    },
+    showLoadingInfo: function(value){
+    },
 }

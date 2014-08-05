@@ -42,15 +42,6 @@ var Util = {
             return rstate;
         }
     },
-    showLoading: function(value){
-        if(value){
-            $("#loadStationData").css("display", "block");
-            $("#loadStationData").css("background-color", "rgba(0,0,0,0.8)");
-        }else{ 
-            $("#loadStationData").css("display", "none");
-            $("#loadStationData").css("background-color", "rgba(0,0,0,0.0)");
-        }
-    },
     //rangeType => true KM / false miles
     getAreaFromPoint: function(pointLat, pointLon, range, rangeType){
         if(!rangeType) range *= 0.621371;
@@ -72,7 +63,12 @@ var MapSystem = {
     area: undefined,
     loadMap: function(){
         var mapOptions = {
-            zoom: 5
+            zoom: 5,
+            panControl: false,
+            rotateControl: false,
+            maxZoom: 19,
+            minZoom: 10,
+            streetViewControl: false,
         };
 
         map = new google.maps.Map(Util.getId('map-canvas'),
@@ -112,23 +108,16 @@ var Station = {
     selected: undefined,
 
     getInfo: function(id, from_time, to_time){
-        Util.showLoading(true);
+        Visual.showLoadingInfo(true);
 
-        $.post('/stations/'+id+'/info', { from_time: from_time, to_time: from_time}, 
-        function(data){
-            var object = JSON.parse(data);
-
-            var htmlData = "";
-            for(var i = 0, len = object.times.length; i < len; i++)
-                htmlData += "<div class='anchor timetablevalue bck light'>"+object.times[i]+"</div>"
-
-            Util.getId("timetable").innerHTML = htmlData;
-            Util.showLoading(false);
-        },
-        function(error){
-            Util.showLoading(false);
-            Util.getId("timetable").innerHTML = "<div class='anchor timetablevalue bck light'>"+"Error Downloading Data"+"</div>";
-        });
+        $.get('/stations/'+id+'/times', { from: from_time, to: from_time}, 
+            function(times){
+                Visual.clearTimes();
+                Visual.showStationTimes(times);
+                Util.getId("timetable").innerHTML = htmlData;
+                Visual.showLoadingInfo(false);
+            }, "json"
+        );
     },
 
     getNear: function(area){

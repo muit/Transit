@@ -20,4 +20,9 @@ var Visual = {
     },
     clearTimes: function(){
     },
+    showLoading: function(value){
+
+    },
+    showLoadingInfo: function(value){
+    },
 }
