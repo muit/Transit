@@ -46,8 +46,8 @@ body {
     line-height: 220px;
 }
 .timetablebox{
-    background-color: rgba(0, 0, 0, 0.2);
-    padding-top: 0.25em;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 0.75em;
     padding-bottom:  0.25em;
     width: 100%;
 }
@@ -58,7 +58,8 @@ body {
     border-radius: 5px;
     text-align: center;
     line-height: 32px;
-    box-shadow: 5px 5px 10px black;
+
+    text-shadow: 1px 1px 5px black;
 
     margin-left: 0.25em;
     margin-right: 0.25em;
