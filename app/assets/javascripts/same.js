@@ -162,7 +162,6 @@ var Station = {
                         var h = now.getHours();
                         var m = now.getMinutes();
                         var s = now.getSeconds();
-
                         var from = h+":"+m+":"+s;
 
                         var h2 = h;
