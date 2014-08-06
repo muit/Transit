@@ -138,7 +138,7 @@ class GtfsRetriever
 
   def self.createTrip(row)
     #trip.create (trip_id, service_id, route_id)
-    @@tripsInsertHash.push([row.id, row.service_id, row.trip_headsign])
+    @@tripsInsertHash.push([row.id, row.service_id, row.headsign])
     print "\r"
     print "Trip: #{@@count}"
     @@count += 1
@@ -242,3 +242,25 @@ class GtfsRetriever
   end
 end
 
+module GTFS
+  module Model
+    def self.included(base)
+      base.extend ClassMethods
+
+      base.class_variable_set('@@prefix', '')
+      base.class_variable_set('@@optional_attrs', [])
+      base.class_variable_set('@@required_attrs', [])
+
+      def valid?
+        !self.class.required_attrs.any?{|f| self.send(f.to_sym).nil?}
+      end
+
+      def initialize(attrs)
+        attrs.each do |key, val|
+          realkey = key.gsub("\xEF\xBB\xBF".force_encoding("UTF-8"), "")
+          instance_variable_set("@#{realkey}", val)
+        end
+      end
+    end
+  end
+end
