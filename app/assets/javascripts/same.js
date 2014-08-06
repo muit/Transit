@@ -118,18 +118,6 @@ var Station = {
     markersArray: [],
     selected: undefined,
 
-    getInfo: function(id, from_time, to_time){
-        Visual.showLoadingInfo(true);
-        console.log(from_time +"-"+to_time);
-        $.get('/stations/'+id+'/times', { from: from_time, to: to_time}, 
-            function(times){
-                Visual.clearTimes();
-                Visual.showStationTimes(times);
-                Visual.showLoadingInfo(false);
-            }, "json"
-        );
-    },
-
     getNear: function(area){
         //area = {minLat, minLon, maxLat, maxLon}
         var self = this;
@@ -141,6 +129,17 @@ var Station = {
                 $.each(self.list, function( i, station ) {
                     self.markersArray.push(self.createMarker(station.name, station.lat, station.lon));
                 });
+            }, "json"
+        );
+    },
+    getInfo: function(id, from_time, to_time){
+        Visual.showLoadingInfo(true);
+        console.log(from_time +"-"+to_time);
+        $.get('/stations/'+id+'/times', { from: from_time, to: to_time}, 
+            function(times){
+                Visual.clearTimes();
+                Visual.showStationTimes(times);
+                Visual.showLoadingInfo(false);
             }, "json"
         );
     },
@@ -165,7 +164,15 @@ var Station = {
                         var s = now.getSeconds();
 
                         var from = h+":"+m+":"+s;
-                        var to = h+":"+(m+10)+":"+s;
+
+                        var h2 = h;
+                        var m2 = m+20;
+                        var s2 = s;
+                        if(m>=60){
+                            var h2 = h+parseInt(m2/60);
+                            m2 %= 60;
+                        }
+                        var to = h2+":"+m2+":"+s;
 
                         self.getInfo(self.list[i].id, from, to);
                     }

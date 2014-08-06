@@ -19,6 +19,7 @@ var Visual = {
     showStationTimes: function(times){
         var box = $(".timetablebox")
         times.forEach(function(time){
+            console.log(time.headsign);
             box.append("<div class='anchor timetablevalue bck light'>"+time.arrival+" - "+time.headsign+"</div>");
         });
     },

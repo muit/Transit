@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140731091927) do
+ActiveRecord::Schema.define(version: 20140806143806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 20140731091927) do
     t.float   "lon"
   end
 
+  add_index "stations", ["lat", "lon"], name: "index_stations_on_lat_and_lon", using: :btree
+
   create_table "stop_times", force: true do |t|
     t.integer "station_id"
     t.string  "trip_id"
@@ -43,10 +45,14 @@ ActiveRecord::Schema.define(version: 20140731091927) do
     t.string  "departure"
   end
 
+  add_index "stop_times", ["station_id", "arrival"], name: "index_stop_times_on_station_id_and_arrival", using: :btree
+
   create_table "trips", force: true do |t|
     t.string "trip_id"
     t.string "service_id"
     t.string "headsign"
   end
+
+  add_index "trips", ["trip_id"], name: "index_trips_on_trip_id", using: :btree
 
 end
