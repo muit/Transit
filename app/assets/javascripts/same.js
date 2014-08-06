@@ -120,12 +120,11 @@ var Station = {
 
     getInfo: function(id, from_time, to_time){
         Visual.showLoadingInfo(true);
-
-        $.get('/stations/'+id+'/times', { from: from_time, to: from_time}, 
+        console.log(from_time +"-"+to_time);
+        $.get('/stations/'+id+'/times', { from: from_time, to: to_time}, 
             function(times){
                 Visual.clearTimes();
                 Visual.showStationTimes(times);
-                Util.getId("timetable").innerHTML = htmlData;
                 Visual.showLoadingInfo(false);
             }, "json"
         );
@@ -158,9 +157,18 @@ var Station = {
         google.maps.event.addListener(marker, 'click', function(){
             for(var i = 0, len = self.list.length; i < len; i++)
                 if(self.list[i].name == marker.title){
-                    if(self.list[i] != self.selected)
-                        self.showStation(self.selected);
+                    if(self.list[i] != self.selected){
+                        Visual.showStation(self.selected);
+                        var now = new Date();
+                        var h = now.getHours();
+                        var m = now.getMinutes();
+                        var s = now.getSeconds();
 
+                        var from = h+":"+m+":"+s;
+                        var to = h+":"+(m+10)+":"+s;
+
+                        self.getInfo(self.list[i].id, from, to);
+                    }
                     self.selected = self.list[i];
                     break;
                 }
@@ -168,26 +176,4 @@ var Station = {
 
         return  marker
     },
-
-    showStation: function(station){
-        if(typeof(station)==='undefined') station = this.list[0];
-        if(!station) return "There´s no any station";
-
-        if ($("#timetable").hasClass("active")){
-            $("#timetable").removeClass("active");
-            setTimeout(function(){
-                $("#stationNameShow").text(station.name);
-                $("#timetable").addClass("active");
-            }, 500);
-        }
-        else
-        {
-            $("#stationNameShow").text(station.name);
-            $("#timetable").addClass("active");
-        }
-    }
-}
-
-var Times = {
-
 }

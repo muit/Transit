@@ -44,9 +44,9 @@ ActiveRecord::Schema.define(version: 20140731091927) do
   end
 
   create_table "trips", force: true do |t|
-    t.string  "trip_id"
-    t.string  "service_id"
-    t.integer "route_id"
+    t.string "trip_id"
+    t.string "service_id"
+    t.string "headsign"
   end
 
 end

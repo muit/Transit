@@ -15,6 +15,48 @@
 //= require_tree ./desktop
 //= require same
 
+var Visual = {
+    showStationTimes: function(times){
+        var box = $(".timetablebox")
+        times.forEach(function(time){
+            box.append("<div class='anchor timetablevalue bck light'>"+time.arrival+" - "+time.headsign+"</div>");
+        });
+    },
+    clearTimes: function(){
+        $(".timetablebox").html("");
+    },
+
+    showLoading: function(value){
+        if(value){
+            $("#loadStationData").css("display", "block");
+            $("#loadStationData").css("background-color", "rgba(0,0,0,0.8)");
+        }else{ 
+            $("#loadStationData").css("display", "none");
+            $("#loadStationData").css("background-color", "rgba(0,0,0,0.0)");
+        }
+    },
+    showLoadingInfo: function(value){
+
+    },
+    showStation: function(station){
+        if(typeof(station)==='undefined') station = Station.list[0];
+        if(!station) return "There´s no any station";
+
+        if ($("#timetable").hasClass("active")){
+            $("#timetable").removeClass("active");
+            setTimeout(function(){
+                $("#stationNameShow").text(station.name);
+                $("#timetable").addClass("active");
+            }, 500);
+        }
+        else
+        {
+            $("#stationNameShow").text(station.name);
+            $("#timetable").addClass("active");
+        }
+    }
+}
+
 $( document ).ready(function() {
     if(window.google)
         MapSystem.loadMap();
@@ -69,27 +111,3 @@ $( document ).ready(function() {
         }
     });
 });
-
-var Visual = {
-    showStationTimes: function(times){
-        var box = $(".timetablebox")
-        times.forEach(function(time){
-            box.append("<div class='anchor timetablevalue bck light'>"+time.arrival+" - "+time.headsign+"</div>");
-        });
-    },
-    clearTimes: function(){
-        $(".timetablebox").html("");
-    },
-
-    showLoading: function(value){
-        if(value){
-            $("#loadStationData").css("display", "block");
-            $("#loadStationData").css("background-color", "rgba(0,0,0,0.8)");
-        }else{ 
-            $("#loadStationData").css("display", "none");
-            $("#loadStationData").css("background-color", "rgba(0,0,0,0.0)");
-        }
-    },
-    showLoadingInfo: function(value){
-    },
-}
