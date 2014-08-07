@@ -6,7 +6,7 @@ class GtfsRetriever
   def self.updateData(cacheLenght = 100000, stations = true, services = true, trips = true, stoptimes = true)
     setup
     @@cacheLenght = cacheLenght
-    @@count = 0
+    @@count = 1
     emptyCache
 
     puts "==All local gtfs databases will be reset=="
@@ -88,6 +88,8 @@ class GtfsRetriever
     puts "==All Gtfs Databases Imported=="
 
   end
+
+  private
 
   def self.createStation(row)
     #Station.create (stop_id, name, lat, lon)
