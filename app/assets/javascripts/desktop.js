@@ -44,15 +44,18 @@ var Visual = {
 
         if ($("#timetable").hasClass("active")){
             $("#timetable").removeClass("active");
+
             setTimeout(function(){
                 $("#stationNameShow").text(station.name);
                 $("#timetable").addClass("active");
+                Station.showInfo();
             }, 500);
         }
         else
         {
             $("#stationNameShow").text(station.name);
             $("#timetable").addClass("active");
+            Station.showInfo();
         }
     }
 }

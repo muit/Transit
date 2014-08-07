@@ -114,7 +114,8 @@ mapOptions);
 }
 
 var Station = {
-    list: [],
+    nearList: [],
+    times: [],
     markersArray: [],
     selected: undefined,
 
@@ -135,13 +136,20 @@ var Station = {
     getInfo: function(id, from_time, to_time){
         Visual.showLoadingInfo(true);
         console.log(from_time +"-"+to_time);
+        var self = this;
         $.get('/stations/'+id+'/times', { from: from_time, to: to_time}, 
             function(times){
-                Visual.clearTimes();
-                Visual.showStationTimes(times);
-                Visual.showLoadingInfo(false);
+                self.times = times;
+                if(Visual.isInfoShow())
+                    this.showInfo();
             }, "json"
         );
+    },
+    showInfo: function(){
+        Visual.clearTimes();
+        if(this.times)
+            Visual.showStationTimes(this.times);
+        Visual.showLoadingInfo(false);
     },
     createMarker: function(title, lat, lon){
         var pos = new google.maps.LatLng(lat, lon);
