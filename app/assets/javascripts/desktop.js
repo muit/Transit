@@ -36,7 +36,10 @@ var Visual = {
         }
     },
     showLoadingInfo: function(value){
-
+        if(value)
+            $(".timetablebox").html('<div class="timetablebox inline"><div class="anchor timetablevalue bck dark"><div id="loadingInfo"><div id="loading_1" class="loading"></div><div id="loading_2" class="loading"></div><div id="loading_3" class="loading"></div><div id="loading_4" class="loading"></div><div id="loading_5" class="loading"></div><div id="loading_6" class="loading"></div><div id="loading_7" class="loading"></div><div id="loading_8" class="loading"></div></div></div></div>');
+        else
+            this.clearTimes();
     },
     showStation: function(station){
         if(typeof(station)==='undefined') station = Station.list[0];
@@ -44,10 +47,11 @@ var Visual = {
 
         if ($("#timetable").hasClass("active")){
             $("#timetable").removeClass("active");
-
+            var self = this;
             setTimeout(function(){
                 $("#stationNameShow").text(station.name);
                 $("#timetable").addClass("active");
+                self.showLoadingInfo(false);
                 Station.showInfo();
             }, 500);
         }
@@ -55,6 +59,7 @@ var Visual = {
         {
             $("#stationNameShow").text(station.name);
             $("#timetable").addClass("active");
+            this.showLoadingInfo(false);
             Station.showInfo();
         }
     },

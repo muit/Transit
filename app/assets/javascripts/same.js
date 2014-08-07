@@ -149,7 +149,6 @@ var Station = {
         Visual.clearTimes();
         if(this.times)
             Visual.showStationTimes(this.times);
-        Visual.showLoadingInfo(false);
     },
     createMarker: function(title, lat, lon){
         var pos = new google.maps.LatLng(lat, lon);
@@ -163,28 +162,26 @@ var Station = {
 
         google.maps.event.addListener(marker, 'click', function(){
             for(var i = 0, len = self.list.length; i < len; i++)
-                if(self.list[i].name == marker.title){
-                    if(self.list[i] != self.selected){
-                        Visual.showStation(self.selected);
-                        var now = new Date();
-                        var h = now.getHours();
-                        var m = now.getMinutes();
-                        var s = now.getSeconds();
-                        var from = h+":"+m+":"+s;
+                if(self.list[i] != self.selected){
+                    Visual.showStation(self.selected);
+                    var now = new Date();
+                    var h = now.getHours();
+                    var m = now.getMinutes();
+                    var s = now.getSeconds();
+                    var from = h+":"+m+":"+s;
 
-                        var h2 = h;
-                        var m2 = m+20;
-                        var s2 = s;
-                        if(m2>=60){
-                            h2 = h+parseInt(m2/60);
-                            m2 %= 60;
-                        }
-                        var to = h2+":"+m2+":"+s;
-
-                        self.getInfo(self.list[i].id, from, to);
+                    var h2 = h;
+                    var m2 = m+20;
+                    var s2 = s;
+                    if(m2>=60){
+                        h2 = h+parseInt(m2/60);
+                        m2 %= 60;
                     }
-                    self.selected = self.list[i];
-                    break;
+                    var to = h2+":"+m2+":"+s;
+
+                    self.getInfo(self.list[i].id, from, to);
+                self.selected = self.list[i];
+                break;
                 }
         });
 
