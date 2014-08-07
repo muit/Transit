@@ -141,7 +141,7 @@ var Station = {
             function(times){
                 self.times = times;
                 if(Visual.isInfoShow())
-                    this.showInfo();
+                    self.showInfo();
             }, "json"
         );
     },
@@ -175,8 +175,8 @@ var Station = {
                         var h2 = h;
                         var m2 = m+20;
                         var s2 = s;
-                        if(m>=60){
-                            var h2 = h+parseInt(m2/60);
+                        if(m2>=60){
+                            h2 = h+parseInt(m2/60);
                             m2 %= 60;
                         }
                         var to = h2+":"+m2+":"+s;

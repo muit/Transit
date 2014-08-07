@@ -19,7 +19,7 @@ var Visual = {
     showStationTimes: function(times){
         var box = $(".timetablebox")
         times.forEach(function(time){
-            box.append("<div class='anchor timetablevalue bck theme'>"+time.arrival+" - "+time.headsign+"</div>");
+            box.append("<div class='anchor timetablevalue bck dark'><span class='on-left margin-left'>"+time.arrival+"</span>"+time.headsign+"</div>");
         });
     },
     clearTimes: function(){
@@ -57,7 +57,10 @@ var Visual = {
             $("#timetable").addClass("active");
             Station.showInfo();
         }
-    }
+    },
+    isInfoShow: function(){
+        return $("#timetable").hasClass("active");
+    },
 }
 
 $( document ).ready(function() {

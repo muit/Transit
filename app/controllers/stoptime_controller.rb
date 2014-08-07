@@ -1,7 +1,7 @@
 class StoptimeController < ApplicationController
   def get
     services = loadActualServices
-    stoptimes = StopTime.where(station_id: params[:station_id]).where(arrival: params[:from]..params[:to])
+    stoptimes = StopTime.where(station_id: params[:station_id]).where(arrival: params[:from]..params[:to]).order("arrival")
 
     puts stoptimes.length
     results = []
@@ -9,6 +9,7 @@ class StoptimeController < ApplicationController
       stoptimes.each do |stoptime|
         trip = getTrip(stoptime.trip_id)
         results.push({arrival: stoptime.arrival, headsign: trip.headsign}) if containsCorrectService(trip, services)
+
       end
     end
     render :json => results
