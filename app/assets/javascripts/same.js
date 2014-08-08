@@ -139,9 +139,14 @@ var Station = {
         var self = this;
         $.get('/stations/'+id+'/times', { from: from_time, to: to_time}, 
             function(times){
-                self.times = times;
-                if(Visual.isInfoShow())
-                    self.showInfo();
+                var error = times.shift();
+                if(error.message != "")
+                    Visual.showError(error.message);
+                else{
+                    self.times = times;
+                    if(Visual.isInfoShow())
+                        self.showInfo();
+                }
             }, "json"
         );
     },

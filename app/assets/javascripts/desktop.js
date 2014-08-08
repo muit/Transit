@@ -37,7 +37,7 @@ var Visual = {
     },
     showLoadingInfo: function(value){
         if(value)
-            $(".timetablebox").html('<div class="timetablebox inline"><div class="anchor timetablevalue bck dark"><div id="loadingInfo"><div id="loading_1" class="loading"></div><div id="loading_2" class="loading"></div><div id="loading_3" class="loading"></div><div id="loading_4" class="loading"></div><div id="loading_5" class="loading"></div><div id="loading_6" class="loading"></div><div id="loading_7" class="loading"></div><div id="loading_8" class="loading"></div></div></div></div>');
+            $(".timetablebox").html('<div class="anchor timetablevalue bck dark"><div id="loadingInfo"><div id="loading_1" class="loading"></div><div id="loading_2" class="loading"></div><div id="loading_3" class="loading"></div><div id="loading_4" class="loading"></div><div id="loading_5" class="loading"></div><div id="loading_6" class="loading"></div><div id="loading_7" class="loading"></div><div id="loading_8" class="loading"></div></div></div>');
         else
             this.clearTimes();
     },
@@ -66,6 +66,9 @@ var Visual = {
     isInfoShow: function(){
         return $("#timetable").hasClass("active");
     },
+    showError: function(message){
+        $(".timetablebox").html("<div class='anchor timetablevalue bck dark'>"+message+"</div>");
+    }
 }
 
 $( document ).ready(function() {

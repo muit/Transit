@@ -1,21 +1,43 @@
 class StoptimeController < ApplicationController
   def get
+    results = []
+    results.push({message: ""})
+
     services = loadActualServices
+    return if watchError(!services, "An error ocurred on server (id: 101).", results)
+
     stoptimes = StopTime.where(station_id: params[:station_id]).where(arrival: params[:from]..params[:to]).order("arrival")
 
-    puts stoptimes.length
-    results = []
+    
     ActiveRecord::Base.transaction do
       stoptimes.each do |stoptime|
         trip = getTrip(stoptime.trip_id)
+        
+        return if watchError(!trip, "An error ocurred on server (id: 102).", results)
         results.push({arrival: stoptime.arrival, headsign: trip.headsign}) if containsCorrectService(trip, services)
 
       end
     end
-    render :json => results
+    
+    return if watchError(stoptimes.length-1 == 0, "Nothing stops here right now!", results)
+    return if watchError(stoptimes.length-1 < 0, "An error ocurred on server (id: 103).", results)
+
+    puts stoptimes.length-1
+    if(results[0].message == "")
+      render :json => results
+    end
   end
 
   private
+  def watchError(condition, message, results)
+    if(condition)
+      results[0] = {message: message}
+      render :json => results
+      puts message
+    end
+    return condition
+  end
+
   def getTrip(trip_id)
     Trip.where(trip_id: trip_id).first
   end
