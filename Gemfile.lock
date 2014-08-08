@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/muit/gtfs.git
+  revision: 667622509913d7a9371691f8ac6f6575d09ca6f8
+  specs:
+    gtfs (0.2.3)
+      multi_json
+      rake
+      rubyzip (< 1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -41,10 +50,6 @@ GEM
     coffee-script-source (1.7.1)
     erubis (2.7.0)
     execjs (2.2.1)
-    gtfs (0.2.3)
-      multi_json
-      rake
-      rubyzip (< 1.0.0)
     hike (1.2.3)
     i18n (0.6.11)
     jbuilder (2.1.3)
@@ -134,7 +139,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import (~> 0.5.0)
   coffee-rails (~> 4.0.0)
-  gtfs (~> 0.2.3)
+  gtfs!
   jbuilder (~> 2.0)
   jquery-rails
   pg
