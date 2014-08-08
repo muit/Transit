@@ -164,7 +164,8 @@ var Station = {
         var marker = new google.maps.Marker({
             position: pos,
             map: map,
-            title: title
+            title: title,
+            icon: "assets/marker.png"
         });
 
         google.maps.event.addListener(marker, 'click', function(){

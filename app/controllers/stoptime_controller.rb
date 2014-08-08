@@ -23,9 +23,7 @@ class StoptimeController < ApplicationController
     return if watchError(stoptimes.length-1 < 0, "An error ocurred on server (id: 103).", results)
 
     puts stoptimes.length-1
-    if(results[0].message == "")
-      render :json => results
-    end
+    render :json => results
   end
 
   private
