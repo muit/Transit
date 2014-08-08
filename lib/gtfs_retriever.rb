@@ -15,8 +15,7 @@ class GtfsRetriever
     emptyCache
 
     puts "==All local gtfs databases will be reset=="
-    puts "==Started importing Gtfs Databases=="
-    puts ""
+    puts "==Started importing Gtfs Databases==\n"
 
     #Bucle whit all databases in model GtfsLocations
       puts "**Downloading #{name} Gtfs Zip..."
@@ -247,25 +246,3 @@ class GtfsRetriever
   end
 end
 
-module GTFS
-  module Model
-    def self.included(base)
-      base.extend ClassMethods
-
-      base.class_variable_set('@@prefix', '')
-      base.class_variable_set('@@optional_attrs', [])
-      base.class_variable_set('@@required_attrs', [])
-
-      def valid?
-        !self.class.required_attrs.any?{|f| self.send(f.to_sym).nil?}
-      end
-
-      def initialize(attrs)
-        attrs.each do |key, val|
-          realkey = key.gsub("\xEF\xBB\xBF".force_encoding("UTF-8"), "")
-          instance_variable_set("@#{realkey}", val)
-        end
-      end
-    end
-  end
-end

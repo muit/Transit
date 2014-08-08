@@ -26,7 +26,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 # GTFS Zip Reader
-gem 'gtfs', '~> 0.2.3'
+gem 'gtfs', :git => "https://github.com/muit/gtfs.git"
 
 # Activerecords-import
 gem 'activerecord-import', '~> 0.5.0'
