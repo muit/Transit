@@ -6,7 +6,38 @@ children:
               - Atom.Button:
                   events:
                     - touch
-                  icon: navicon-round
-                  path: settings
+                  icon: note2
+                  path: info/info_content
             style: left
+        - Molecule.Navigation:
+            children:
+              - Atom.Button:
+                  events:
+                    - touch
+                  icon: loading-config
+                  path: settings
+            style: right
+        - Atom.Heading:
+            size: h1
+            value: Transit
+  - Molecule.Navigation:
+      children:
+        - Atom.Button:
+            events:
+              - touch
+            text: "Locate Me!"
+  - Organism.Section:
+      children:
+        - Molecule.Div:
+            children: []
+            id: map
+      id: map_content
+  - Organism.Footer:
+      children:
+        - Molecule.Navigation:
+            children:
+              - Atom.Link:
+                  href: "http://github.com/muit"
+                  text: Made by Muit
+            style: right
 id: main

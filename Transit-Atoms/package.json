@@ -1,7 +1,7 @@
 {
   "name"            : "transit",
   "version"         : "1.0.0",
-  "description"     : "Public transport info in real time.",
+  "description"     : "Public Transport is near of you",
   "author"          : "undefined <undefined>",
   "homepage"        : "http://tapquo.com",
   "license"         : "MIT",

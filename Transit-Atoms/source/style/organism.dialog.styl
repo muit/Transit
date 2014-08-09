@@ -2,8 +2,12 @@
   &:not(.active)
     display: none
   &.active
-    background-color: rgba(0,0,0,0.75)
-    & > [data-organism-dialog]
+    &:not(.no-block)
+      background-color: rgba(0,0,0,0.75)
+    &.no-block
+      transition height (.5 * ANIMATION_DURATION)
+
+    > [data-organism-dialog]
       vendor(animation-duration, ANIMATION_DURATION)
       vendor(animation-timing-function, ANIMATION_EASE)
       &.show
@@ -14,14 +18,14 @@
         vendor(animation-direction, reverse)
         vendor(animation-fill-mode, forwards)
 
-    & > [data-organism-dialog=loading]
+    > [data-organism-dialog=loading]
       SPEED = ANIMATION_DURATION * 1.4
       &::before
         animation dialog-loading SPEED 0 infinite
       &::after
         animation dialog-loading SPEED (SPEED / 2) infinite
 
-  & > :not([data-organism-dialog=loading])
+  > :not([data-organism-dialog=loading]):not([data-organism-dialog=push])
     background-color: lighten(BACKGROUND, 2.5%)
     color: darken(BACKGROUND, 75%)
 
@@ -43,13 +47,24 @@
       background-color: darken(BACKGROUND, 2.5%)
       border-top: solid 1px darken(BACKGROUND, 5%)
 
-  & > [data-organism-dialog=loading]
+  > [data-organism-dialog=loading]
     background: darken(DARK, 50%)
     border-radius: 1rem
     &::before, &::after
       background-color: WHITE
       border-radius: 50%
 
+  > [data-organism-dialog=push]
+    background-color: THEME
+    color: WHITE
+    > h1
+      box-shadow 0 (-(SHADOW_HEIGHT)) 0 SHADOW_OPACITY
+    > section
+      background-color: WHITE
+      > figure
+        background-color: #ddd
+      > p
+        color: DARK
 
 @keyframes dialog-show
   0%

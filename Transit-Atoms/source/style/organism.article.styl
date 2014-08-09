@@ -3,14 +3,22 @@
   vendor(animation-duration, ANIMATION_DURATION)
   vendor(animation-timing-function, ANIMATION_EASE)
 
-  > [data-organism-header] > *
-    transition opacity (ANIMATION_DURATION * 2) ANIMATION_EASE
-    opacity: 0
+  &:not(.active)
+    > [data-organism-header] > *
+      transition opacity (ANIMATION_DURATION * 2) ANIMATION_EASE
+      opacity: 0
 
   &.active
     background-color: darken(BACKGROUND, 5%)
     > [data-organism-header] > *
       opacity: 1
+
+    transition-property opacity, scale
+    transition-duration (.5 * ANIMATION_DURATION)
+    transition-timing-function ANIMATION_EASE
+    &.back
+      opacity: .5
+      transform: scale(.9)
 
     &.aside
       &:not(.right)

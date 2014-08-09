@@ -4,5 +4,22 @@ children:
         - Atom.Heading:
             size: h1
             value: Settings
-id: settings
+  - Organism.Section:
+      children:
+        - Molecule.Navigation:
+            children: []
+            style: left
+        - Molecule.Navigation:
+            children: []
+      id: settings_content
+  - Organism.Footer:
+      children:
+        - Molecule.Navigation:
+            children:
+              - Atom.Link:
+                  text: Atoms by Tapquo
+                  href: "http://atoms.tapquo.com"
+                  style: align center
 method: prepend
+id: settings
+style: right
