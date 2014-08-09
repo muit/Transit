@@ -134,7 +134,6 @@ var Station = {
         );
     },
     getInfo: function(id, from_time, to_time){
-        Visual.showLoadingInfo(true);
         console.log(from_time +"-"+to_time);
         var self = this;
         $.get('/stations/'+id+'/times', { from: from_time, to: to_time}, 
@@ -144,16 +143,15 @@ var Station = {
                     Visual.showError(error.message);
                 else{
                     self.times = times;
-                    if(Visual.isInfoShow())
-                        self.showInfo();
+                    Visual.clearTimes();
+                    console.log("Received "+self.times.length+" stoptimes(Station "+id+").");
+                    Visual.showStationTimes(self.times);
                 }
             }, "json"
         );
     },
     showInfo: function(){
-        Visual.clearTimes();
-        if(this.times)
-            Visual.showStationTimes(this.times);
+        Visual.showLoadingInfo(true);
     },
     createMarker: function(title, lat, lon){
         var pos = new google.maps.LatLng(lat, lon);
@@ -178,16 +176,16 @@ var Station = {
                             var h = now.getHours();
                             var m = now.getMinutes();
                             var s = now.getSeconds();
-                            var from = h+":"+m+":"+s;
+                            var from = ((h<10)?"0"+h:h)+":"+((m<10)?"0"+m:m)+":"+((s<10)?"0"+s:s);
 
                             var h2 = h;
-                            var m2 = m+20;
+                            var m2 = m+30;
                             var s2 = s;
                             if(m2>=60){
                                 h2 = h+parseInt(m2/60);
                                 m2 %= 60;
                             }
-                            var to = h2+":"+m2+":"+s;
+                            var to = ((h2<10)?"0"+h2:h2)+":"+((m2<10)?"0"+m2:m2)+":"+((s<10)?"0"+s:s);
 
                             self.getInfo(station.id, from, to);
                             self.selected = station;

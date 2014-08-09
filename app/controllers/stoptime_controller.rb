@@ -18,11 +18,10 @@ class StoptimeController < ApplicationController
 
       end
     end
+    return if watchError(results.length-1 == 0, "Nothing stops here right now!", results)
+    return if watchError(results.length-1 < 0, "An error ocurred on server (id: 103).", results)
     
-    return if watchError(stoptimes.length-1 == 0, "Nothing stops here right now!", results)
-    return if watchError(stoptimes.length-1 < 0, "An error ocurred on server (id: 103).", results)
-
-    puts stoptimes.length-1
+    puts results.length-1
     render :json => results
   end
 

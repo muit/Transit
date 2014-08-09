@@ -51,16 +51,14 @@ var Visual = {
             setTimeout(function(){
                 $("#stationNameShow").text(station.name);
                 $("#timetable").addClass("active");
-                self.showLoadingInfo(false);
-                Station.showInfo();
+                self.showLoadingInfo(true);
             }, 500);
         }
         else
         {
             $("#stationNameShow").text(station.name);
             $("#timetable").addClass("active");
-            this.showLoadingInfo(false);
-            Station.showInfo();
+            Visual.showLoadingInfo(true);
         }
     },
     isInfoShow: function(){
