@@ -13,7 +13,6 @@ class GtfsRetriever
     setup
     @@count = 1
     emptyCache
-
     puts "==All local gtfs databases will be reset=="
     puts "==Started importing Gtfs Databases==\n"
 

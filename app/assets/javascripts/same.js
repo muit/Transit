@@ -169,7 +169,7 @@ var Station = {
         google.maps.event.addListener(marker, 'click', function(){
             self.list.forEach(function(station){
                 if (station.name == marker.title)
-                    if (station.lat == lat && station.lon == lon){
+                    if (station.lat == lat && station.lon == lon)
                         if(station != self.selected){
                             Visual.showStation(station);
                             var now = new Date();
@@ -190,7 +190,6 @@ var Station = {
                             self.getInfo(station.id, from, to);
                             self.selected = station;
                         }
-                    }
             });
         });
 
