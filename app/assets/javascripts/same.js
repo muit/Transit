@@ -134,6 +134,7 @@ var Station = {
         );
     },
     getInfo: function(id, from_time, to_time){
+        console.log("\nStation selected: "+id);              
         console.log(from_time +"-"+to_time);
         var self = this;
         $.get('/stations/'+id+'/times', { from: from_time, to: to_time}, 
@@ -186,7 +187,6 @@ var Station = {
                                 m2 %= 60;
                             }
                             var to = ((h2<10)?"0"+h2:h2)+":"+((m2<10)?"0"+m2:m2)+":"+((s<10)?"0"+s:s);
-
                             self.getInfo(station.id, from, to);
                             self.selected = station;
                         }

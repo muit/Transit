@@ -1,7 +1,10 @@
 class StoptimeController < ApplicationController
   def get
+
     results = []
     results.push({message: ""})
+
+    return if watchError(Station.where(real_id: params[:station_id]).length <= 0, "An error ocurred on server (id: 104).", results)
 
     services = loadActualServices
     return if watchError(!services, "An error ocurred on server (id: 101).", results)
