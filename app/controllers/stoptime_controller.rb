@@ -9,7 +9,13 @@ class StoptimeController < ApplicationController
     services = loadActualServices
     return if watchError(!services, "An error ocurred on server (id: 101).", results)
 
-    stoptimes = StopTime.where(station_id: params[:station_id]).where(arrival: params[:from]..params[:to]).order("arrival")
+    stoptimes = []
+    if(params[:from] > params[:to])
+      stoptimes.concat(StopTime.where(station_id: params[:station_id]).where(arrival: params[:from].."11:59:59").order("arrival"))
+      stoptimes.concat(StopTime.where(station_id: params[:station_id]).where(arrival: "00:00:00"..params[:to]).order("arrival"))
+    else
+      stoptimes.concat(StopTime.where(station_id: params[:station_id]).where(arrival: params[:from]..params[:to]).order("arrival"))
+    end
 
     
     ActiveRecord::Base.transaction do
