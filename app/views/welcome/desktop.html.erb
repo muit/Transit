@@ -32,6 +32,25 @@
         </div>
     </aside>
 
+    <aside id="time" class="absolute bck dark column_4" style="opacity: 0.95;">
+        <div>
+        <header class="bck theme" style="opacity: 1;">
+            <div class="session on-left">
+                <h6 id="stationNameShow" class="text bold inline">Station Name</h6>
+            </div>
+            <a href="#" id="closetimeaside" data-box="close" class="on-right text big icon remove color white"></a>
+        </header>
+        <article class="bck dark scroll">
+            <label>From:</label><br>
+            <input type="time" value="12:00"></input>
+            <hr>
+            <label>To:</label><br>
+            <input type="time" value="12:30"></input>
+        </article>
+        </div>
+    </aside>
+
+
     <section>
         <header class = "align center">
             <div id="buttonsmenu">
@@ -73,6 +92,7 @@
             TukTuk by <a href="http://tapquo.com" class="color theme text bold">tapquo</a>
         </footer>
     </div>
+
     <script>
         TukTuk.Modal.loading();
         setTimeout( TukTuk.Modal.hide, 1000);
