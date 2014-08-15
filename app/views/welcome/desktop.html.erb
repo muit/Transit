@@ -13,7 +13,7 @@
             <a href="#" id="closeaside" data-box="close" class="on-right text big icon remove color white"></a>
         </header>
         <div class="anchor timetableindex inline bck dark">
-                <div class="anchor timetablevalue"><span class='on-left margin-left'>Time    </span>Direction</div>
+                <div class="anchor timetablevalue"><span class='on-left margin-left'>Time    </span>Direction<a href="#" id="openTimeSettings" class='on-right icon time margin-right'></a></div>
         </div>
         <article class="bck dark scroll">
             <div class="timetablebox inline">
@@ -38,14 +38,14 @@
             <div class="session on-left">
                 <h6 id="stationNameShow" class="text bold inline">Station Name</h6>
             </div>
-            <a href="#" id="closetimeaside" data-box="close" class="on-right text big icon remove color white"></a>
+            <a href="#" id="closeTimeSettings" data-box="close" class="on-right text big icon remove color white"></a>
         </header>
         <article class="bck dark scroll">
             <label>From:</label><br>
-            <input type="time" value="12:00"></input>
+            <input id="from_time" type="time" value="12:00"></input>
             <hr>
             <label>To:</label><br>
-            <input type="time" value="12:30"></input>
+            <input id="to_time" type="time" value="12:30"></input>
         </article>
         </div>
     </aside>

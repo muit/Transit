@@ -66,6 +66,15 @@ var Visual = {
     },
     showError: function(message){
         $(".timetablebox").html("<div class='anchor timetablevalue bck dark'>"+message+"</div>");
+    },
+    showTimeSettings: function(value){
+        if(value){
+            $("#time").addClass("active");
+            $("#timetable").removeClass("active");
+        } else {
+            $("#time").removeClass("active");
+            $("#timetable").addClass("active");
+        }
     }
 }
 
@@ -78,7 +87,6 @@ $( document ).ready(function() {
     $("body").bind('click', function(event) {
 
         switch($(event.target).attr('id')){
-
         case "closeaside":
             $("#timetable").removeClass("active");
             break;
@@ -96,6 +104,13 @@ $( document ).ready(function() {
                 MapSystem.locateMe();
             else
                 Util.createNotification("", "Error", "Google Maps doesn´t work! Make sure you have internet.");
+            break;
+        case "openTimeSettings":
+            Visual.showTimeSettings(true);
+            break;
+        case "closeTimeSettings":
+            Visual.showTimeSettings(false);
+            Station.getInfo(Station.selected.id, from_time.value, to_time.value);
             break;
         }
     });
