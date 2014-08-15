@@ -177,7 +177,7 @@ var Station = {
                             var h = now.getHours();
                             var m = now.getMinutes();
                             var s = now.getSeconds();
-                            var from = ((h<10)?"0"+h:h)+":"+((m<10)?"0"+m:m)+":"+((s<10)?"0"+s:s);
+                            var from = self.clearTime(h, m, s);
 
                             var h2 = h;
                             var m2 = m+30;
@@ -186,13 +186,16 @@ var Station = {
                                 h2 = h+parseInt(m2/60);
                                 m2 %= 60;
                             }
-                            var to = ((h2<10)?"0"+h2:h2)+":"+((m2<10)?"0"+m2:m2)+":"+((s<10)?"0"+s:s);
+                            var to = self.clearTime(h2, m2, s2);
                             self.getInfo(station.id, from, to);
                             self.selected = station;
                         }
             });
         });
 
-        return  marker
+        return  marker;
     },
+    clearTime: function(h, m, s){
+        return ((h<10)?"0"+h:h)+":"+((m<10)?"0"+m:m)+":"+((s<10)?"0"+s:s)
+    }
 }
