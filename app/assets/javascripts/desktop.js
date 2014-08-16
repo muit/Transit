@@ -128,7 +128,7 @@ $( document ).ready(function() {
             Visual.showModal(true, "About Me", "I´m just a crazy and lazy programmer who loves coding. From Madrid in Spain. Contact me if you have any issue or suggess!")
             break;
         case "button_contact":
-            Visual.showModal(true, "Contact", "You can contact me sending an email to 'miguel_3c@hotmail.com', publising an issue on github, or searching me on linkedin(Miguel Fernández Arce).")
+            Visual.showModal(true, "Contact", "You can contact me sending an email to 'miguel_3c@hotmail.com', publishing an issue on github, or searching me on linkedin(Miguel Fernández Arce).")
             break;
         case "button_settings":
             break;
