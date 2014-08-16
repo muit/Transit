@@ -75,6 +75,15 @@ var Visual = {
             $("#time").removeClass("active");
             $("#timetable").addClass("active");
         }
+    },
+    showModal: function(value, title, message){
+        if(value){
+            $("#modal").addClass("active");
+            $("#modalTitle").html(title);
+            $("#modalMessage").html(message);
+        } else {
+            $("#modal").removeClass("active");
+        }
     }
 }
 
@@ -111,6 +120,17 @@ $( document ).ready(function() {
         case "closeTimeSettings":
             Visual.showTimeSettings(false);
             Station.getInfo(Station.selected.id, from_time.value, to_time.value);
+            break;
+        case "modalClose":
+            Visual.showModal(false);
+            break;
+        case "button_aboutMe":
+            Visual.showModal(true, "About Me", "I´m just a crazy and lazy programmer who loves coding. From Madrid in Spain. Contact me if you have any issue or suggess!")
+            break;
+        case "button_contact":
+            Visual.showModal(true, "Contact", "You can contact me sending an email to 'miguel_3c@hotmail.com', publising an issue on github, or searching me on linkedin(Miguel Fernández Arce).")
+            break;
+        case "button_settings":
             break;
         }
     });

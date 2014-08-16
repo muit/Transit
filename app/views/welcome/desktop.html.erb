@@ -83,16 +83,23 @@
         </header>
         <article class="bck dark scroll">
             <nav class="align center text bold" data-tuktuk="menu">
-                <a href="#" class="active">Settings</a><br>
-                <a href="#">Contact</a><br>
-                <a href="#">About us</a><br>
+                <a id="button_settings" href="#" class="active">Settings</a><br>
+                <a id="button_contact" href="#">Contact</a><br>
+                <a id="button_aboutMe" href="#">About me</a><br>
             </nav>
         </article>
         <footer class="bck dark text center">
             TukTuk by <a href="http://tapquo.com" class="color theme text bold">tapquo</a>
         </footer>
     </div>
-
+    <div id="modal" data-tuktuk="modal" class="active column_5">
+        <header>
+            <h4 id="modalTitle" class="text book inline"></h4>
+            <a href="#" id="modalClose" data-modal="close" class="on-right text big icon remove color white"></a>
+        </header>
+        <article id="modalMessage" class="bck dark">
+        </article>
+    </div>
     <script>
         TukTuk.Modal.loading();
         setTimeout( TukTuk.Modal.hide, 1000);
