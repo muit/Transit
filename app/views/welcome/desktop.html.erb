@@ -100,6 +100,16 @@
         <article id="modalMessage" class="bck dark">
         </article>
     </div>
+    <div id="settings" data-tuktuk="modal" class="active column_5">
+        <header>
+            <h4 id="settings_title" class="text book inline">Settings</h4>
+            <a href="#" id="settings_close" data-modal="close" class="on-right text big icon remove color white"></a>
+        </header>
+        <article id="settings_content" class="bck dark">
+            <label>Theme Color:</label>
+            <input id="settings_color" type="color"></input>
+        </article>
+    </div>
     <script>
         TukTuk.Modal.loading();
         setTimeout( TukTuk.Modal.hide, 1000);
