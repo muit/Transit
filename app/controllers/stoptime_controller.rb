@@ -6,38 +6,45 @@ class StoptimeController < ApplicationController
 
     return if watchError(Station.where(real_id: params[:station_id]).length <= 0, "An error ocurred on server (id: 104).", results)
 
-    services = loadActualServices
-    return if watchError(!services, "An error ocurred on server (id: 101).", results)
-
-    stoptimes = []
     if(params[:from] > params[:to])
-      stoptimes.concat(StopTime.where(station_id: params[:station_id]).where(arrival: params[:from].."11:59:59").order("arrival"))
-      stoptimes.concat(StopTime.where(station_id: params[:station_id]).where(arrival: "00:00:00"..params[:to]).order("arrival"))
+      results += calculate(params[:station_id], params[:from], "11:59:59", Date.today)
+      results += calculate(params[:station_id], "00:00:00", params[:to], Date.today+1.day)
     else
-      stoptimes.concat(StopTime.where(station_id: params[:station_id]).where(arrival: params[:from]..params[:to]).order("arrival"))
+      results += calculate(params[:station_id], params[:from], params[:to], Date.today)
     end
 
+    return if watchError(results.length-1 == 0, "Nothing stops here right now!")
+    return if watchError(results.length-1 < 0, "An error ocurred on server (id: 103).")
     
-    ActiveRecord::Base.transaction do
-      stoptimes.each do |stoptime|
-        trip = getTrip(stoptime.trip_id)
-        
-        return if watchError(!trip, "An error ocurred on server (id: 102).", results)
-        results.push({arrival: stoptime.arrival, headsign: trip.headsign}) if containsCorrectService(trip, services)
-
-      end
-    end
-    return if watchError(results.length-1 == 0, "Nothing stops here right now!", results)
-    return if watchError(results.length-1 < 0, "An error ocurred on server (id: 103).", results)
-    
-    puts results.length-1
+    puts "#{results.length-1} stoptimes"
     render :json => results
   end
 
   private
-  def watchError(condition, message, results)
+
+  def calculate(station_id, from, to, date)
+    results = []
+
+    services = getServices(date)
+    return if watchError(!services, "An error ocurred on server (id: 101).")
+    stoptimes = StopTime.where(station_id: station_id).where(arrival: from..to).order("arrival")
+
+    ActiveRecord::Base.transaction do
+      stoptimes.each do |stoptime|
+        trip = getTrip(stoptime.trip_id)
+        return if watchError(!trip, "An error ocurred on server (id: 102).")
+        
+        if isCorrectService?(trip, services)
+          results.push({arrival: stoptime.arrival, headsign: trip.headsign}) 
+        end
+      end
+    end
+    results
+  end
+
+  def watchError(condition, message)
     if(condition)
-      results[0] = {message: message}
+      results = [{message: message}]
       render :json => results
       puts message
     end
@@ -48,11 +55,11 @@ class StoptimeController < ApplicationController
     Trip.where(trip_id: trip_id).first
   end
 
-  def loadActualServices
-    today = Date.today
-    Service.where("start < ? AND endd > ?",today, today).where(today.dayname.downcase.to_sym => true)
+  def getServices(date)
+    date = Date.today if(date == nil)
+    Service.where("start < ? AND endd > ?",today, today).where(date.dayname.downcase.to_sym => true)
   end
-  def containsCorrectService(trip, services)
+  def isCorrectService?(trip, services)
     services.each do |service|
       return true if service.service_id == trip.service_id
     end
