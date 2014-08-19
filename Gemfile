@@ -28,11 +28,15 @@ gem 'spring',        group: :development
 # GTFS Zip Reader
 gem 'gtfs', :git => "https://github.com/muit/gtfs.git"
 
+#Jobs Cron-Like
+gem 'rufus-scheduler', '~> 3.0.8'
+
 # Activerecords-import
 gem 'activerecord-import', '~> 0.5.0'
 
 group :development do
   gem 'pry-rails', '~> 0.3.2'
+  gem 'rspec-rails'
 end
 
 group :production do
