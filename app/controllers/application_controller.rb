@@ -4,8 +4,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   helper_method :mobile_device?
+  
   private
-
   def mobile_device?
     if session[:mobile_param]
       session[:mobile_param] == "1"
