@@ -5,9 +5,16 @@ class StopTime < ActiveRecord::Base
 
 
   def self.by_id(station_id)
-    where(station_id: station_id).first
+    self.where(station_id: station_id)
   end
   def self.by_time(from, to)
+    self.where(arrival: from..to).order("arrival")
+  end
+
+  def by_id(station_id)
+    where(station_id: station_id)
+  end
+  def by_time(from, to)
     where(arrival: from..to).order("arrival")
   end
 end
