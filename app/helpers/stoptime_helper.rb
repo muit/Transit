@@ -3,13 +3,13 @@ module StoptimeHelper
     results = []
 
     services = Service.by_date(date)
-    return if watchError(services == [], "An error ocurred on server (id: 101).")
+    return if watch_error(services == [], "An error ocurred on server (id: 101).")
 
     ActiveRecord::Base.transaction do
       stoptimes = StopTime.by_id(station_id).by_time(from, to)
       stoptimes.each do |stoptime|
         trip = Trip.by_id(stoptime.trip_id)
-        return if watchError(!trip, "An error ocurred on server (id: 102).")
+        return if watch_error(!trip, "An error ocurred on server (id: 102).")
         
         if isCorrectService?(trip, services)
           results.push({arrival: stoptime.arrival, headsign: trip.headsign}) 

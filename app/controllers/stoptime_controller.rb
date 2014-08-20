@@ -1,10 +1,10 @@
 class StoptimeController < ApplicationController
-
+  include StoptimeHelper
   def get
     results = []
     results.push({message: ""})
 
-    return if watch_error(Station.where(real_id: params[:station_id]).length <= 0, "An error ocurred on server (id: 104).", results)
+    return if watch_error(Station.where(real_id: params[:station_id]).length <= 0, "An error ocurred on server (id: 104).")
 
     if(params[:from] > params[:to])
       results += calculate(params[:station_id], params[:from], "11:59:59", Date.today)
